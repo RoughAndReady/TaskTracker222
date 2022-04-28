@@ -12,17 +12,17 @@ import java.util.Optional;
 public class DaoServiceImpl implements DaoService {
 
     @Autowired
-    private DaysDAO daysDAO;
+    private DaysDAO daysDAOs;
 
 
     @Override
     public List<Day> findAll() {
-        return daysDAO.findAll();
+        return daysDAOs.findAll();
     }
 
     @Override
     public Day findById(int theId) {
-        Optional<Day> result = daysDAO.findById(theId);
+        Optional<Day> result = daysDAOs.findById(theId);
         Day acc=null;
         if(result.isPresent()) {
             acc=result.get();
@@ -36,12 +36,12 @@ public class DaoServiceImpl implements DaoService {
 
     @Override
     public void save(Day day) {
-        daysDAO.save(day);
+        daysDAOs.save(day);
     }
 
     @Override
     public void deleteById(int theId) {
-        daysDAO.deleteById(theId);
+        daysDAOs.deleteById(theId);
     }
 
 }

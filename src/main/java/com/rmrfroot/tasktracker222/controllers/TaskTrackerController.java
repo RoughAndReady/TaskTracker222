@@ -1,15 +1,22 @@
 package com.rmrfroot.tasktracker222.controllers;
 
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import com.rmrfroot.tasktracker222.entities.Task;
+import com.rmrfroot.tasktracker222.services.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.List;
+
+@RestController
 public class TaskTrackerController {
 
+    @Autowired
+    private TaskService taskService;
     @GetMapping("/task-tracker-user")
-    public String taskTrackerUser(Model model){
-        return "TaskTracker";
+    public List<Task> taskList(){
+        List<Task> taskList = taskService.findAll();
+
+        return taskList;
     }
 }

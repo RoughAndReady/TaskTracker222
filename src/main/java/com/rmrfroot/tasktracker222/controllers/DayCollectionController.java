@@ -1,27 +1,23 @@
 package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.entities.Day;
-import com.rmrfroot.tasktracker222.services.DaoService;
+import com.rmrfroot.tasktracker222.services.DayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class DayCollectionController {
 
-
     @Autowired
-    private DaoService daoService;
-
+    private DayService dayService;
 
     @GetMapping("/main/dayCollection")
-    public String main(Model model){
-        List<Day> dayList =daoService.findAll();
+    public List<Day> getDayCollection(){
+        List<Day> dayList = dayService.findAll();
 
-        model.addAttribute("days", dayList);
-        return "dayCollection";
+        return dayList;
     }
 }
