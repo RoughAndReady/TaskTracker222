@@ -3,6 +3,7 @@ package com.rmrfroot.tasktracker222.services;
 
 import com.rmrfroot.tasktracker222.dao.DaysDAO;
 import com.rmrfroot.tasktracker222.entities.Day;
+import com.rmrfroot.tasktracker222.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,16 +23,29 @@ public class DayServiceImpl implements DayService{
 
     @Override
     public Day findById(int theId) {
-        return null;
+        return daysDAO.findById(theId).orElseThrow(() -> new ResourceNotFoundException("Day", "Id", theId));
     }
 
     @Override
-    public void save(Day day) {
-
+    public Day save(Day day) {
+        return daysDAO.save(day);
     }
 
     @Override
     public void deleteById(int theId) {
-
+        daysDAO.findById(theId).orElseThrow(RuntimeException::new);
+        daysDAO.deleteById(theId);
     }
+
+    @Override
+    public Day update(Day day, int id) {
+        Day existingDay = daysDAO.findById(id).orElseThrow(RuntimeException::new);
+        existingDay.setFirstName(day.getFirstName());
+        existingDay.setLastName(day.getLastName());
+        existingDay.setPassword(day.getPassword());
+        existingDay.setEmail(day.getEmail());
+        daysDAO.save(existingDay);
+        return existingDay;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.rmrfroot.tasktracker222.entities;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Table(name="tasks")
@@ -27,10 +28,10 @@ public class Task {
     private String pdf_file;
 
     @Column(name="start_date")
-    private Calendar startDate;
+    private Date startDate;
 
     @Column(name="deadline_date")
-    private Calendar deadlineDate;
+    private Date deadlineDate;
 
     @Column(name="note")
     private String note;
@@ -38,7 +39,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(int id, String title, String task_priority, String description, String pdf_file, Calendar startDate, Calendar deadlineDate, String note) {
+    public Task(int id, String title, String task_priority, String description, String pdf_file, Date startDate, Date deadlineDate, String note) {
         this.id = id;
         this.title = title;
         this.task_priority = task_priority;
@@ -64,10 +65,10 @@ public class Task {
     public String getPdf_file() {
         return pdf_file;
     }
-    public Calendar getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
-    public Calendar getDeadlineDate() {
+    public Date getDeadlineDate() {
         return deadlineDate;
     }
     public String getNote() {
@@ -93,11 +94,11 @@ public class Task {
         this.pdf_file = pdf_file;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public void setDeadlineDate(Calendar deadlineDate) {
+    public void setDeadlineDate(Date deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
 

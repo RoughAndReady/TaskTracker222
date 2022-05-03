@@ -16,7 +16,6 @@ public class TaskCollection {
     }
 
     //public void remove(Day day) {
-    //needs Day getters to implement
     //}
 
     public int isEmpty() {

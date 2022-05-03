@@ -17,7 +17,6 @@ public class DayCollection {
     }
 
     //public void remove(Day day) {
-    //needs Day getters to implement
     //}
 
     public int isEmpty() {
