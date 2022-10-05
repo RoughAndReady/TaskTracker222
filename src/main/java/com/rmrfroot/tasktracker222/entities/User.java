@@ -187,6 +187,7 @@ public class User {
         this.teamList = teamList;
     }
 
+    //not used yet, ready to implement when needed
     //    random uuid
     private static void generateUUID() {
         UUID uuid = UUID.randomUUID();
