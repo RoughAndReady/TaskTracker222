@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-//drill collection controller
-
+/**
+ * Drill Collection Controller for Drill Collection
+ * @author Brian
+ */
 @RestController
 @RequestMapping("/drillCollection")
 public class DrillCollectionController {
@@ -20,12 +22,15 @@ public class DrillCollectionController {
     @Autowired
     private DrillDaoService drillDaoService;
 
-
     public DrillCollectionController(DrillDaoService drillDaoService){
         super();
         this.drillDaoService = drillDaoService;
     }
 
+    /**
+     * @param model
+     * @return collection of drills
+     */
     @GetMapping
     public String main(Model model) {
         List<Drill> drillList = drillDaoService.findAll();
@@ -34,24 +39,39 @@ public class DrillCollectionController {
         return "drillCollection";
     }
 
+    /**
+     * @param id for searching for drill
+     * @return HTML response code 200
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Drill> findById(@PathVariable("id") int id) {
         return new ResponseEntity<>(drillDaoService.findById(id), HttpStatus.OK);
     }
 
 
+    /**
+     * @param drill to save drill to database
+     * @return HTML response code 200
+     */
     @PostMapping
     public ResponseEntity<Drill> save(@RequestBody Drill drill) {
         return new ResponseEntity<>(drillDaoService.save(drill), HttpStatus.CREATED);
     }
 
 
-
+    /**
+     * @param id to search for drill
+     * @param drill for updating drill
+     * @return HTML response code 200
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Drill> update(@PathVariable("id") int id, @RequestBody Drill drill) {
         return new ResponseEntity<>(drillDaoService.update(id,drill), HttpStatus.OK);
     }
 
+    /**
+     * @param id for deleting drill
+     */
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") int id) {
         drillDaoService.deleteById(id);
