@@ -28,6 +28,7 @@ public class DrillCollectionController {
     }
 
     /**
+     * Gets a collection of drills
      * @param model
      * @return collection of drills
      */
@@ -40,6 +41,7 @@ public class DrillCollectionController {
     }
 
     /**
+     * Searches for drill by id
      * @param id for searching for drill
      * @return HTML response code 200
      */
@@ -50,6 +52,7 @@ public class DrillCollectionController {
 
 
     /**
+     * Saves drill to database
      * @param drill to save drill to database
      * @return HTML response code 200
      */
@@ -60,6 +63,7 @@ public class DrillCollectionController {
 
 
     /**
+     * Updates drill in database
      * @param id to search for drill
      * @param drill for updating drill
      * @return HTML response code 200
@@ -70,6 +74,7 @@ public class DrillCollectionController {
     }
 
     /**
+     * Deletes drill by id
      * @param id for deleting drill
      */
     @DeleteMapping("/{id}")
