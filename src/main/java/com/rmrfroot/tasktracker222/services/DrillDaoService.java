@@ -1,9 +1,7 @@
 package com.rmrfroot.tasktracker222.services;
 
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
-import org.springframework.transaction.annotation.Transactional;
+import com.rmrfroot.tasktracker222.entities.Drill;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //drill dao service

@@ -1,7 +1,7 @@
 package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
+import com.rmrfroot.tasktracker222.entities.Drill;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import com.rmrfroot.tasktracker222.validations.ValidateDrill;
 import org.springframework.beans.factory.annotation.Autowired;

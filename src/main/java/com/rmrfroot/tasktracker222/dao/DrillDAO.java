@@ -1,6 +1,6 @@
 package com.rmrfroot.tasktracker222.dao;
 
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
+import com.rmrfroot.tasktracker222.entities.Drill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

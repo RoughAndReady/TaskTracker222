@@ -3,10 +3,9 @@ package com.rmrfroot.tasktracker222.services;
 
 import com.rmrfroot.tasktracker222.dao.DrillDAO;
 import com.rmrfroot.tasktracker222.entities.DrillSchedules;
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
+import com.rmrfroot.tasktracker222.entities.Drill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.rmrfroot.tasktracker222.dao.CustomDrillSchedulesDAO;
 import java.util.List;
 import java.util.Optional;
