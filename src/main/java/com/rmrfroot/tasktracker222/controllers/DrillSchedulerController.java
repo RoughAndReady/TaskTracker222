@@ -20,7 +20,12 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Drill Scheduler Controller
+ * @author Amrin
+ * @author Noel
+ * @author Tobechi
+ */
 @Controller
 public class DrillSchedulerController {
 
@@ -42,6 +47,8 @@ public class DrillSchedulerController {
     /**
      * For use by a singular recipient.
      * Only shows drills that are assigned to them.
+     * @param model
+     * @return DrillScheduler
      */
     @GetMapping("/drill-schedule-recipient")
     public String drillScheduleRecipient(Model model) {
@@ -63,6 +70,8 @@ public class DrillSchedulerController {
     /**
      * For use by a schedule manager.
      * Shows all scheduled drills that are assigned to officer.
+     * @param model for Officers
+     * @return collection of drill schedules
      */
     @GetMapping("/drill-schedule-manager")
     public String drillScheduleManager(Model model) {
@@ -83,18 +92,34 @@ public class DrillSchedulerController {
         return "DrillScheduler";
     }
 
+    /**
+     * Get drill collection
+     * @param model
+     * @return drill collection
+     */
     @GetMapping("/drill-schedule-recipient/drills")                       // made a drills.html to check if scheduler
     public String getDrillCollection(Model model) {                          // is able to retrieve database
         model.addAttribute("drills", drillDaoService.findAll());
         return "drills";
     }
 
+    /**
+     * Search for drill by id
+     * @param id for searching for drill
+     * @param model
+     * @return drill
+     */
     @GetMapping("/drill-schedule-recipient/drills/{id}")
     public String findDrillById(@PathVariable("id") int id, Model model) {
         model.addAttribute("drills", drillDaoService.findById(id));
         return "drills";
     }
 
+    /**
+     * Test drill creation. Will later be removed.
+     * @param model
+     * @return drill creation for user
+     */
     @GetMapping("/drill-schedule-manager/createDrill")
     public String createTestDrill(Model model) {
         //Drill drill = new Drill(event_title, start_date, deadline_date, location, admin_name, officer_email, note, created_timestamp);
@@ -122,6 +147,12 @@ public class DrillSchedulerController {
         return "CreateDrill";
     }
 
+    /**
+     * Edits a drill
+     * @param id
+     * @param model
+     * @return edited drill
+     */
     @GetMapping("/drill-schedule-manager/editDrill/{drill-id}")
     public String editDrill(@PathVariable("drill-id") int id, Model model) {
         ArrayList<String> locationList = new ArrayList<>();
@@ -139,24 +170,40 @@ public class DrillSchedulerController {
     }
 
 
+    /**
+     * Creates a new drill and posts to database
+     * @param drill
+     * @return access to created drill
+     */
     @PostMapping("/create-drill")
     public String createDrill(@ModelAttribute("drills") Drill drill) {
         //drillDaoService.save(drill);
         return "redirect:/drill-schedule-recipient/drills";
     }
 
+    /**
+     * Updates drill in database according to id
+     * @param id for updating drill
+     * @param drill to update
+     * @return HTML response code 200
+     */
     @PutMapping()
     public ResponseEntity<Drill> updateDrill(@PathVariable("id") int id, Drill drill) {
 
         return new ResponseEntity<>(drillDaoService.update(id, drill), HttpStatus.OK);
     }
 
+    /**
+     * Deletes drill according to id
+     * @param id for drill deletion
+     */
     @DeleteMapping()
     public void deleteDrillById(@PathVariable("id") int id) {
         drillDaoService.deleteById(id);
     }
 
     /**
+     * Authenticates username
      * @return the username of the active session user
      */
     private String getUsername() {
@@ -169,6 +216,14 @@ public class DrillSchedulerController {
         return null;
     }
 
+    /**
+     * Saves drill to database. Verifies drill matches correct form.
+     * @param validateDrill
+     * @param errors
+     * @param model
+     * @param principal
+     * @return redirect to saved drill, error page, or registration form
+     */
     @PostMapping("/register-drill")
     public String saveDrill(@Valid @ModelAttribute("drills") ValidateDrill validateDrill, BindingResult errors, Model model, Principal principal) {
         if(errors.hasErrors()){
