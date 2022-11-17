@@ -40,6 +40,7 @@
 /* custom scrollbar */
 body::-webkit-scrollbar {
 width: 0.25rem;
+height: 0.25rem;
 }
 body::-webkit-scrollbar-track {
     background: #1e1e24;
@@ -81,7 +82,7 @@ h3 {
     position: fixed;
     background-color: var(--bg-primary);
     transition: width 200ms ease;
-    z-index: 1;
+    z-index: 3;
 }
 .sidebar-list {
     list-style: none;
@@ -175,6 +176,7 @@ h3 {
     width: 100%;
     height: 5rem;
     border-bottom: solid var(--text-secondary) 2px;
+    z-index: 2;
 }
 .bottom-right {
     background: var(--color-white);
@@ -183,9 +185,13 @@ h3 {
     width: 100%;
     height: calc(100% - 5rem);
     margin-top: auto;
+    z-index: 1;
 }
 
-/* calendar */
+/* DEPRECATED: first iteration of week view; switched for grid format
+               to support multiple concurrent events
+
+/ * calendar * /
 .calendarContainer {
     width: 95%;
     height: 100%;
@@ -252,6 +258,174 @@ h3 {
     border-bottom: solid var(--bg-primary) 1px;
     display: relative;
 }
+*/
+
+/* calendar */
+li {
+  list-style: none;
+}
+
+.calendar-container {
+  display: grid;
+  grid-template-columns: 50px auto;
+  grid-template-rows: auto;
+  gap: 1px 1px;
+  grid-template-areas:
+    ". header"
+    "timeslots-container main";
+}
+
+.weekdays,
+.day-numbers {
+  display: grid;
+  text-align: center;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays {
+  background: rgb(83, 83, 83);
+  color: whitesmoke;
+}
+
+.daynumbers {
+  background: rgb(194, 194, 194);
+  min-height: 2em;
+}
+
+.daynumbers li {
+  border-right: 1px solid black;
+}
+
+.header {
+  background: var(--text-primary);
+  grid-area: header;
+}
+
+.timeslots-container {
+  background: lightblue;
+  grid-area: timeslots-container;
+  justify-items: left;
+}
+
+.timeslots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeslots li {
+  min-height: 60px;
+}
+
+.timeslots li::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  width: 100%;
+  height: 1px;
+  background: var(--color-dark-variant);
+  z-index: 1;
+}
+
+.event-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /*
+  4 * 15 min intervals * 12 slots
+  4 * 12 = 48 */
+  grid-template-rows: repeat(48, 1fr);
+  background: rgb(222, 223, 231);
+  grid-area: main;
+  position: relative;
+  white-space: nowrap;
+  background: repeating-linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 14%,
+    gray 14.5%
+  );
+}
+
+.event-name {
+  overflow: hidden;
+  color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  line-height: 15px;
+}
+
+.slot {
+  position: absolute;
+  background: rgb(66, 147, 223);
+  border-radius: 5px;
+  z-index: 2;
+  margin-top: 1px;
+  border-color: rgb(3, 155, 229);
+  outline: none;
+}
+
+.slot::before {
+  -webkit-box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12),
+    0 3px 5px -1px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 100ms linear;
+}
+
+.slot::after {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: -webkit-calc(100% + 2px);
+  width: calc(100% + 2px);
+  height: -webkit-calc(100% + 2px);
+  height: calc(100% + 2px);
+  content: "";
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  pointer-events: none;
+  border: 1px solid #fff;
+}
+
+.slot-1 {
+  /* is based on duration */
+  height: 45px;
+
+  /* based on start time */
+  grid-row: 17;
+
+  /* based on day of week */
+  grid-column: 2;
+}
+
+.slot-2 {
+  height: 45px;
+}
+
+.slot-3 {
+  height: 75px;
+}
+
+.slot-4 {
+  color: red;
+}
+
+.on-resize {
+  opacity: 0.85;
+}
+
+.gridcell::after {
+  content: "";
+  border-right: #dadce0 1px solid;
+  position: relative;
+  -webkit-box-flex: 1 1 auto;
+  height: 200%;
+}
 
 /* event details */
 .titleDiv {
@@ -268,7 +442,8 @@ h3 {
     padding-top: 1.5rem;
 }
 
-/* sample events */
+/* DEPRECATED: only used in first iteration of week view
+/ * sample events * /
 .event1 {
     background-color: var(--color-warning);
     width: 100%;
@@ -280,5 +455,4 @@ h3 {
     width: 100%;
     height: 100%;
 }
-
-/* TODO: write CSS for login page */
+*/

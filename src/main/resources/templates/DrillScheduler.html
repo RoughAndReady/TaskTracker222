@@ -9,25 +9,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <!-- stylesheet -->
     <link rel="stylesheet" th:href="@{/style.css}">
-
-    <script>
-        function clicked_on1(){
-            document.getElementById('title').innerHTML = 'Event 1';
-            document.getElementById('time').innerHTML = 'Mon 9:00am - 11:00am';
-            document.getElementById('place').innerHTML = 'Place 1';
-            document.getElementById('admin').innerHTML = 'Person 1';
-            document.getElementById('group').innerHTML = 'Group 1';
-        }
-    </script>
-    <script>
-        function clicked_on2(){
-            document.getElementById('title').innerHTML = 'Event 2';
-            document.getElementById('time').innerHTML = 'Thu 12:00pm - 3:00pm';
-            document.getElementById('place').innerHTML = 'Place 2';
-            document.getElementById('admin').innerHTML = 'Person 2';
-            document.getElementById('group').innerHTML = 'Group 2';
-        }
-    </script>
+    <!-- week view event rendering -->
+    <script type="text/javascript" th:src="@{/js/event-rendering.js}"></script>
 </head>
 
 <body>
@@ -63,9 +46,60 @@
                 <h2>Calendar</h2>
             </div>
             <div class="bottom-left">
-                <!-- calendar container -->
-                <div class="calendarContainer">
-                    <!-- time column -->
+                <div class="calendar-container">
+
+                    <div class="header">
+                        <ul class="weekdays">
+                            <li>Sun</li>
+                            <li>Mon</li>
+                            <li>Tue</li>
+                            <li>Wed</li>
+                            <li>Thu</li>
+                            <li>Fri</li>
+                            <li>Sat</li>
+                        </ul>
+                        <ul class="day-numbers">
+                            <li>20</li>
+                            <li>21</li>
+                            <li>22</li>
+                            <li>23</li>
+                            <li>24</li>
+                            <li>25</li>
+                            <li>26</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeslots-container">
+                        <ul class="timeslots">
+                            <li>6am</li>
+                            <li>7am</li>
+                            <li>8am</li>
+                            <li>9am</li>
+                            <li>10am</li>
+                            <li>11am</li>
+                            <li>12am</li>
+                            <li>1pm</li>
+                            <li>2pm</li>
+                            <li>3pm</li>
+                            <li>4pm</li>
+                            <li>5pm</li>
+                        </ul>
+                    </div>
+
+                    <div class="event-container">
+                        <div class="slot slot-1">
+                            <span class="event-name">Event A</span>
+                        </div>
+                    </div>
+                </div>
+
+
+<!-- DEPRECATED: used for proof of concept in earlier sprints, replaced with grid system
+                 to support displaying concurrent events
+
+                <!- - calendar container - ->
+                <div class="calendarContainerDEPRECATED">
+                    <!- - time column - ->
                     <div class="timeCol">
                         <div class="timeSpace"></div>
                         <div class="timeDiv">
@@ -121,7 +155,7 @@
                         </div>
                         <div class="timeSpace"></div>
                     </div>
-                    <!-- Sunday column -->
+                    <!- - Sunday column - ->
                     <div class="dayCol" id="Sun">
                         <div class="q1" id="Sun600a"></div>
                         <div class="q2" id="Sun615a"></div>
@@ -183,7 +217,7 @@
                         <div class="q3" id="Sun630a"></div>
                         <div class="q4" id="Sun645a"></div>
                     </div>
-                    <!-- Monday column -->
+                    <!- - Monday column - ->
                     <div class="dayCol" id="Mon">
                         <div class="q1" id="Mon600a"></div>
                         <div class="q2" id="Mon615a"></div>
@@ -261,7 +295,7 @@
                         <div class="q3" id="Mon630a"></div>
                         <div class="q4" id="Mon645a"></div>
                     </div>
-                    <!-- Tuesday column -->
+                    <!- - Tuesday column - ->
                     <div class="dayCol" id="Tue">
                         <div class="q1" id="Tue600a"></div>
                         <div class="q2" id="Tue615a"></div>
@@ -323,7 +357,7 @@
                         <div class="q3" id="Tue630a"></div>
                         <div class="q4" id="Tue645a"></div>
                     </div>
-                    <!-- Wednesday column -->
+                    <!- - Wednesday column - ->
                     <div class="dayCol" id="Wed">
                         <div class="q1" id="Wed600a"></div>
                         <div class="q2" id="Wed615a"></div>
@@ -385,7 +419,7 @@
                         <div class="q3" id="Wed630a"></div>
                         <div class="q4" id="Wed645a"></div>
                     </div>
-                    <!-- Thursday column -->
+                    <!- - Thursday column - ->
                     <div class="dayCol" id="Thu">
                         <div class="q1" id="Thu600a"></div>
                         <div class="q2" id="Thu615a"></div>
@@ -471,7 +505,7 @@
                         <div class="q3" id="Thu630a"></div>
                         <div class="q4" id="Thu645a"></div>
                     </div>
-                    <!-- Friday column -->
+                    <!- - Friday column - ->
                     <div class="dayCol" id="Fri">
                         <div class="q1" id="Fri600a"></div>
                         <div class="q2" id="Fri615a"></div>
@@ -533,7 +567,7 @@
                         <div class="q3" id="Fri630a"></div>
                         <div class="q4" id="Fri645a"></div>
                     </div>
-                    <!-- Saturday column -->
+                    <!- - Saturday column - ->
                     <div class="dayCol" id="Sat">
                         <div class="q1" id="Sat600a"></div>
                         <div class="q2" id="Sat615a"></div>
@@ -596,6 +630,7 @@
                         <div class="q4" id="Sat645a"></div>
                     </div>
                 </div>
+-->
             </div>
         </div>
 
