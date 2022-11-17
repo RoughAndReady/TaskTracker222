@@ -1,6 +1,7 @@
 package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
+import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import com.rmrfroot.tasktracker222.validations.ValidateDrill;
@@ -104,21 +105,15 @@ public class DrillSchedulerController {
         drill.setOfficerName("Test officer");
         drill.setDescription("Test description");
 
-        ArrayList<String> locationList = new ArrayList<>();
-        for(int i = 1; i < 10; i++){
-            locationList.add("Location " + i);
-        }
-
-        ArrayList<String> teamList = new ArrayList();
-        for (int i = 1; i < 5; i++) {
-            teamList.add("Team " + i);
-        }
-
         model.addAttribute("drill", drill);
         model.addAttribute("editing", false);
 
-        model.addAttribute("locations", locationList);
-        model.addAttribute("teams", teamList);
+        model.addAttribute("ranks", Group.getRanks());
+        model.addAttribute("flights", Group.getFlights());
+        model.addAttribute("workcenters", Group.getWorkcenters());
+        model.addAttribute("teams", Group.getTeams());
+        model.addAttribute("locations", Group.getLocations());
+
         return "CreateDrill";
     }
 
@@ -141,7 +136,8 @@ public class DrillSchedulerController {
 
     @PostMapping("/create-drill")
     public String createDrill(@ModelAttribute("drills") Drill drill) {
-        //drillDaoService.save(drill);
+        System.out.println(drill.getParticipants());
+        drillDaoService.save(drill);
         return "redirect:/drill-schedule-recipient/drills";
     }
 

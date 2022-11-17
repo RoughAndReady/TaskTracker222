@@ -1,0 +1,284 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+    font-size: 16px;
+    font-family: 'Poppins';
+    --text-primary: #b6b6b6;
+    --text-secondary: #acd7ec;
+    --bg-primary: #23232e;
+    --bg-secondary: #141418;
+    
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #d6edff;
+    --color-dark: #636949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);    
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* custom scrollbar */
+body::-webkit-scrollbar {
+width: 0.25rem;
+}
+body::-webkit-scrollbar-track {
+    background: #1e1e24;
+}
+body::-webkit-scrollbar-thumb {
+    background: #8b95c9;
+}
+
+/* main content styling */
+body {
+    background: var(--color-info-light);
+}
+main {
+    margin-left: 5rem;
+    display: flex;
+    /* flex-direction: column; */
+    height: 100vh;
+}
+
+/* text styling */
+h1 {
+    padding-left: 1rem;
+    color: var(--bg-primary);
+}
+h2 {
+    padding-left: 1rem;
+    color: var(--bg-primary);
+    display: inline;
+}
+h3 {
+    display: inline;
+    color: var(--bg-primary);
+}
+
+/* sidebar styling */
+.sidebar {
+    width: 5rem;
+    height: 100vh;
+    position: fixed;
+    background-color: var(--bg-primary);
+    transition: width 200ms ease;
+    z-index: 1;
+}
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.sidebar-item {
+    width: 100%;
+    transition: 200ms;
+}
+.sidebar-item:last-child{
+    margin-top: auto;
+}
+
+.item-link {
+    display: flex;
+    align-items: center;
+    height: 5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: 200ms;
+}
+.item-text {
+    display: none;
+    color: var(--text-primary);
+    margin-left: 1rem;
+}
+.material-symbols-outlined {
+    min-width: 2rem;
+    margin: 0 1.5rem;
+}
+
+/* sidebar animation */
+.sidebar:hover {
+    width: 16rem;
+}
+.sidebar:hover .item-text {
+    display: block;
+}
+
+/* sidebar item animation */
+.sidebar-item:hover {
+    background: var(--bg-secondary);
+}
+.sidebar-item:hover .item-text{
+    color: var(--text-secondary);
+}
+.sidebar-item:hover .material-symbols-outlined{
+    color: var(--text-secondary);
+}
+
+/* layout */
+.left {
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    height: 100%;
+}
+.top-left {
+    background: var(--color-dark-variant);
+    display: flex;    
+    position: fixed;
+    align-items: center;
+    width: 100%;
+    height: 5rem;
+    border-bottom: solid var(--text-secondary) 2px;
+}
+.bottom-left {
+    background: var(--color-info-light);
+    width: 100%;
+    height: calc(100% - 5rem);
+    margin-top: auto;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+.top-right {
+    background: var(--color-info-dark);
+    display: flex;
+    position: fixed;
+    align-items: center;
+    width: 100%;
+    height: 5rem;
+    border-bottom: solid var(--text-secondary) 2px;
+}
+.bottom-right {
+    background: var(--color-white);
+    display: flex;    
+    flex-direction: column;
+    width: 100%;
+    height: calc(100% - 5rem);
+    margin-top: auto;
+}
+
+/* calendar */
+.calendarContainer {
+    width: 95%;
+    height: 100%;
+    margin-left: 2.5%;
+    display: flex;
+}
+
+.timeCol {
+    width: calc(100% / 8);
+    height: 90%;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.timeSpace {
+
+}
+.timeDiv {
+
+}
+.timeText {
+    font-size: small;    
+}
+
+.dayCol {
+    width: calc(100% / 8);
+    height: 83%;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    margin-bottom: 10%;
+}
+.q1 {
+    width: 100%;
+    height: 100%;
+    border-left: solid var(--bg-primary) 1px;
+    border-right: solid var(--bg-primary) 1px;    
+    border-top: solid var(--bg-primary) 1px;
+    border-bottom: dotted var(--color-dark-variant) 1px;
+    display: relative;
+}
+.q2 {
+    width: 100%;
+    height: 100%;
+    border-left: solid var(--bg-primary) 1px;
+    border-right: solid var(--bg-primary) 1px;    
+    border-bottom: dashed var(--bg-primary) 1px;
+    display: relative;
+}
+.q3 {
+    width: 100%;
+    height: 100%;
+    border-left: solid var(--bg-primary) 1px;
+    border-right: solid var(--bg-primary) 1px;
+    border-bottom: dotted var(--color-dark-variant) 1px;
+    display: relative;
+}
+.q4 {
+    width: 100%;
+    height: 100%;
+    border-left: solid var(--bg-primary) 1px;
+    border-right: solid var(--bg-primary) 1px;    
+    border-bottom: solid var(--bg-primary) 1px;
+    display: relative;
+}
+
+/* event details */
+.titleDiv {
+    padding: 2rem 0 1rem 0;
+}
+.summaryDiv {
+    padding-bottom: 2rem;
+}
+.detailsDiv {
+    padding: 2rem 8rem 1rem 1rem;
+    height: 100%;
+}
+#detailsSub {
+    padding-top: 1.5rem;
+}
+
+/* sample events */
+.event1 {
+    background-color: var(--color-warning);
+    width: 100%;
+    height: 100%;
+}
+
+.event2 {
+    background-color: var(--color-danger);
+    width: 100%;
+    height: 100%;
+}
+
+/* TODO: write CSS for login page */

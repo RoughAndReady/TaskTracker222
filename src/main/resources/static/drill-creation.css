@@ -101,7 +101,7 @@ textarea {
 .spacing-10-div {
     display: flex;
 
-    flex-basis: 10%;
+    flex-basis: 5%;
 }
 
 .drill-create-form-30-field {
@@ -110,7 +110,7 @@ textarea {
     flex-basis: 30%;
 }
 
-.drill-create-form-48-field {
+.drill-create-form-50-field {
     display: flex;
 
     flex-basis: 45%;
@@ -147,4 +147,8 @@ textarea {
 
 .drill-custom-location-field {
     margin-top: 10px;
+}
+
+.chosen-field-multi {
+    width: 100%;
 }

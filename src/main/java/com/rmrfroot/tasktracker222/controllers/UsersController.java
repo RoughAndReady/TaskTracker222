@@ -2,6 +2,7 @@ package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.entities.DrillSchedules;
+import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.entities.UserEditRequest;
 import com.rmrfroot.tasktracker222.services.DrillScheduleService;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -46,14 +48,20 @@ public class UsersController {
         List<User> usersToAdd = new ArrayList<>();
 
         for (User u : allUsers) {
-//            System.out.println(u.getEmail());
-            if (u.getId() >= 41 || u.getId() == 42) {
+            if (u.getId() !=  78) {
                 usersToAdd.add(u);
             }
         }
 
+        Collections.sort(usersToAdd);
+
         model.addAttribute("users", usersToAdd);
         model.addAttribute("userEditRequest", new UserEditRequest());
+
+        model.addAttribute("ranks", Group.getRanks());
+        model.addAttribute("flights", Group.getFlights());
+        model.addAttribute("workcenters", Group.getWorkcenters());
+        model.addAttribute("teams", Group.getTeams());
         return "UserManagement";
     }
 
@@ -61,6 +69,15 @@ public class UsersController {
     public String userEditSubmit(@ModelAttribute("userEditRequest") UserEditRequest request) {
         try {
             User u = usersDaoService.findById(Integer.parseInt(request.getId()));
+
+            // Translate blank values to null since POST does not allow null values
+            if(request.rank.equals(""))
+                request.rank = null;
+            if(request.flight.equals(""))
+                request.flight = null;
+            if(request.workCenter.equals(""))
+                request.workCenter = null;
+
 
             u.setFirstName(request.getFirstName());
             u.setLastName(request.getLastName());
@@ -71,8 +88,8 @@ public class UsersController {
             u.setRank(request.getRank());
             u.setWorkCenter(request.getWorkCenter());
             u.setFlight(request.getFlight());
-//        u.setTeams(request.getTeams());   //TODO - Integrate ArrayList-style team list
-
+            u.setTeams(request.getTeams());   //TODO - Integrate ArrayList-style team list
+            System.out.println(request.getTeams());
             usersDaoService.update(u.getId(), u);
 
             return "redirect:/users";

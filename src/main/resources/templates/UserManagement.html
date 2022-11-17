@@ -8,14 +8,17 @@
 
     <link rel="stylesheet" th:href="@{/drill-creation.css}">
     <link rel="stylesheet" th:href="@{/user-management.css}">
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/chosen-user/style.css}">
+    <link rel="stylesheet" th:href="@{/chosen-user/chosen-old.css}">
 
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script th:src="@{/js/chosen.jquery.js}" type="text/javascript"></script>
+
     <script type="text/javascript" th:src="@{/js/user-management.js}"></script>
     <script src="https://kit.fontawesome.com/a665c629bb.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body onload="selectInitialUser()">
@@ -49,11 +52,11 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="user: ${user}" th:onclick="'updateSelectedUser(' + ${user.id} + ');'"
+                <tr th:each="user: ${users}" th:onclick="'updateSelectedUser(' + ${user.id} + ');'"
                     class="user-table-row"
                     th:id="'user-list-row-' + ${user.id}">
                     <script th:inline="javascript">
-                        user = /*[[${user}]]*/ [];
+                        users = /*[[${users}]]*/ [];
                         userManagementSetup();
                     </script>
 
@@ -80,7 +83,7 @@
         <div class="bottom-right user-editor-div">
             <div class="user-management-editor-div">
 
-                <form class="user-management-table-form" th:action="@{/user}" th:object="${userEditRequest}"
+                <form class="user-management-table-form" autocomplete="off" th:action="@{/users}" th:object="${userEditRequest}"
                       method="post">
                     <table class="user-management-table">
                         <tr>
@@ -97,13 +100,13 @@
                                        th:field="*{lastName}">
                             </td>
                         </tr>
-<!--                        <tr>-->
-<!--                            <th class="user-management-entry">Account Email</th>-->
-<!--                            <td class="user-management-value-cell">-->
-<!--                                <input id="input-account_email" class="user-management-value" type="text"-->
-<!--                                       th:field="*{email}">-->
-<!--                            </td>-->
-<!--                        </tr>-->
+                        <!--                        <tr>-->
+                        <!--                            <th class="user-management-entry">Account Email</th>-->
+                        <!--                            <td class="user-management-value-cell">-->
+                        <!--                                <input id="input-account_email" class="user-management-value" type="text"-->
+                        <!--                                       th:field="*{email}">-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
                         <tr>
                             <th class="user-management-entry">Mil Email</th>
                             <td class="user-management-value-cell">
@@ -135,29 +138,36 @@
                         <tr>
                             <th class="user-management-entry">Rank</th>
                             <td class="user-management-value-cell">
-                                <input id="input-rank" class="user-management-value" type="text"
-                                       th:field="*{rank}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="user-management-entry">Workcenter</th>
-                            <td class="user-management-value-cell">
-                                <input id="input-workcenter" class="user-management-value" type="text"
-                                       th:field="*{workCenter}">
+                                <select id="input-rank" th:field="*{rank}">
+                                    <option value="">No Rank Selected</option>
+                                    <option th:each="rank : ${ranks}" th:value="${rank}" th:text="${rank}"></option>
+                                </select>
                             </td>
                         </tr>
                         <tr>
                             <th class="user-management-entry">Flight</th>
                             <td class="user-management-value-cell">
-                                <input id="input-flight" class="user-management-value" type="text"
-                                       th:field="*{flight}">
+                                <select id="input-flight" th:field="*{flight}">
+                                    <option value="">No Flight Selected</option>
+                                    <option th:each="flight : ${flights}" th:value="${flight}" th:text="${flight}"></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="user-management-entry">Workcenter</th>
+                            <td class="user-management-value-cell">
+                                <select id="input-workcenter" th:field="*{workCenter}">
+                                    <option value="">No Workcenter Selected</option>
+                                    <option th:each="workcenter : ${workcenters}" th:value="${workcenter}" th:text="${workcenter}"></option>
+                                </select>
                             </td>
                         </tr>
                         <tr>
                             <th class="user-management-entry">Teams</th>
                             <td class="user-management-value-cell">
-                                <input id="input-teams" class="user-management-value" type="text"
-                                       th:field="*{teams}">
+                                <select multiple id="input-teams" th:field="*{teams}" autocomplete="off">
+                                    <option th:each="team : ${teams}" th:value="${team}" th:text="${team}"></option>
+                                </select>
                             </td>
                         </tr>
 
@@ -175,6 +185,30 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let select_field_css = {
+                "width": "100%",
+                "font-size": "1.5vh",
+                "border-radius": "2px",
+                "vertical-align": "center"
+            };
+
+            $('#input-rank').attr("data-placeholder", "Rank").chosen();
+            $('#input_rank_chosen').css(select_field_css);
+
+            $('#input-flight').attr("data-placeholder", "Flight").chosen();
+            $('#input_flight_chosen').css(select_field_css);
+
+            $('#input-workcenter').attr("data-placeholder", "Workcenter").chosen();
+            $('#input_workcenter_chosen').css(select_field_css);
+
+            $('#input-teams').attr("data-placeholder", "Teams").chosen();
+            $('#input_teams_chosen').css(select_field_css);
+        });
+    </script>
 
 
 </main>

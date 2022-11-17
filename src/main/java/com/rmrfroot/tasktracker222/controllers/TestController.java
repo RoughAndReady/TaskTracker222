@@ -7,6 +7,7 @@
 package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.Officer;
+import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,14 @@ public class TestController {
 
     @GetMapping("/testpage")
     public String testPage(Model model) {
+        //User.readTeamsFromFile();
+        System.out.println("Loading test page");
+        String[] ranks = Group.getWorkcenters();
+
+        for(int i = 0; i < ranks.length; i++){
+            System.out.println(ranks[i]);
+        }
+
         model.addAttribute("newDrill", new TestObject());
 
         return "CreateDrill";

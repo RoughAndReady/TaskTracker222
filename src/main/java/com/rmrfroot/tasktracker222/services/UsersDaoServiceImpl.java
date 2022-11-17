@@ -52,18 +52,23 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             Optional<User> result = usersDAO.findById(id);
 
             User updatedUser;
-
             if (result.isPresent()) {
                 updatedUser = result.get();
-                usersDAO.deleteById(id);
+                //usersDAO.deleteById(id);
             } else {
                 //day not found
                 throw new RuntimeException("Did not find user id - " + id);
             }
+
+//            updatedUser.setId(id);
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
-            updatedUser.setMilitaryEmail(user.getMilitaryEmail());
-            updatedUser.setCivilianEmail(user.getCivilianEmail());
+
+            if(!user.getMilitaryEmail().isBlank())
+                updatedUser.setMilitaryEmail(user.getMilitaryEmail());
+
+            if(!user.getCivilianEmail().isBlank())
+                updatedUser.setCivilianEmail(user.getCivilianEmail());
             updatedUser.setPhoneNumber(user.getPhoneNumber());
             updatedUser.setOfficeNumber(user.getOfficeNumber());
             updatedUser.setRank(user.getRank());

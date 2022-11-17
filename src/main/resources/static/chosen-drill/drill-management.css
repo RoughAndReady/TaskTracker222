@@ -1,19 +1,21 @@
 
-.user-management-main {
+.drill-management-main {
+    width: 100%;
+
     display: flex;
     overflow: hidden;
 }
 
-.user-editor-div {
+.drill-editor-div {
     padding-left: 10px;
 }
 
 
-.user-table-div {
+.drill-table-div {
     /*width: 50rem !important;*/
 }
 
-.user-table {
+.drill-table {
     width: 100%;
     /*margin: 10px;*/
     padding: 10px;
@@ -25,7 +27,7 @@
     border-collapse: collapse;
 }
 
-.user-table-header {
+.drill-table-header {
     width: available;
 
     /*display: flex;*/
@@ -36,29 +38,29 @@
     text-align: left;
 }
 
-.user-table-header-entry {
+.drill-table-header-entry {
     /*display: flex;*/
     padding: 5px 5px 5px 10px;
 
     text-align: left;
-    user-select: none;
+    drill-select: none;
     /*justify-content: flex-start;*/
 }
 
-.user-table-row {
+.drill-table-row {
     background-color: unset;
     transition: background-color 0.3s;
 }
-.user-table-row:hover {
+.drill-table-row:hover {
     background-color: rgba(169, 209, 231, 0.31);
     transition: background-color 0.3s;
 }
 
-.user-table-row-selected {
+.drill-table-row-selected {
     background-color: #a1c8db;
 }
 
-.user-table-entry {
+.drill-table-entry {
     /*display: flex;*/
     padding: 5px 5px 5px 10px;
 
@@ -67,7 +69,7 @@
     user-select: none;
 }
 
-.user-management-editor-div {
+.drill-management-editor-div {
     /*padding: 10px;*/
 
     display: flex;
@@ -75,12 +77,12 @@
     font-size: 3vh;
 }
 
-.user-management-table-form {
+.drill-management-table-form {
     width: 100%;
 }
 
-.user-management-table {
-    width: 80%;
+.drill-management-table {
+    width: 60%;
     margin-right: 2vw;
 
     display: table;
@@ -89,11 +91,12 @@
     /*table-layout: fixed;*/
 }
 
-.user-management-table-row {
-    margin-right: 2vh;
+.drill-management-table-row {
+    /*padding-top: 5px;*/
+    /*margin-right: 2vh;*/
 }
 
-.user-management-entry {
+.drill-management-entry {
     width: 20%;
     align-content: center;
     word-wrap: break-word;
@@ -102,8 +105,9 @@
     padding-right: .25vw;
 }
 
-.user-management-value-cell {
+.drill-management-value-cell {
     height: 5vh;
+    line-height: 5vh;
     width: 80%;
     padding: 3px;
 
@@ -111,13 +115,9 @@
     vertical-align: middle;
 }
 
-.user-management-value {
+.drill-management-value {
     width: 100%;
-
-    /*display: block;*/
-
-    line-height: 100%;
-    align-content: center;
+    display: block;
 
     margin-bottom: 0;
     padding: 5px;
@@ -126,12 +126,12 @@
     box-sizing: border-box;
 }
 
-.user-edit-button-div {
+.drill-edit-button-div {
     display: flex;
     flex-direction: row;
 }
 
-.user-edit-submit {
+.drill-edit-submit {
     width: 20rem;
     margin-top: 20px;
 
@@ -146,7 +146,7 @@
     border-radius: 4px;
 }
 
-.user-edit-delete {
+.drill-edit-delete {
     margin-left: 2rem;
     background-color: #b93f3f;
 }

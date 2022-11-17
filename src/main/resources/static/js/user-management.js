@@ -22,11 +22,17 @@ function updateSelectedUser(id) {
     updateFieldValue("input-civ_email", selected_user.civilianEmail);
     updateFieldValue("input-personal_phone", selected_user.phoneNumber);
     updateFieldValue("input-office_phone", selected_user.officeNumber);
-    updateFieldValue("input-rank", selected_user.rank);
-    updateFieldValue("input-workcenter", selected_user.workCenter);
-    updateFieldValue("input-flight", selected_user.flight);
-    updateFieldValue("input-teams", selected_user.teams);
+    // updateFieldValue("input-rank", selected_user.rank);
+    // updateFieldValue("input-workcenter", selected_user.workCenter);
+    // updateFieldValue("input-flight", selected_user.flight);
+    // updateFieldValue("input-teams", selected_user.teams);
     updateFieldValue("input-id", selected_user.id);
+
+
+    $('#input-rank').val(selected_user.rank).trigger('chosen:updated');
+    $('#input-flight').val(selected_user.flight).trigger('chosen:updated');
+    $('#input-workcenter').val(selected_user.workCenter).trigger('chosen:updated');
+    $('#input-teams').val(selected_user.teams).trigger('chosen:updated');
 
     if (users !== null) {
         for (let index in users) {
@@ -42,6 +48,7 @@ function updateSelectedUser(id) {
 }
 
 function updateFieldValue(elementID, newValue){
+    console.log("Updating value for " + elementID + " to " + newValue);
     if(newValue !== null && newValue !== undefined){
         document.getElementById(elementID).value = newValue;
     }

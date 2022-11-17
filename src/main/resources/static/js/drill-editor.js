@@ -14,6 +14,7 @@ function showCustomDrillInputField() {
     if (!customLocationRequested) {
         document.getElementById("custom-drill-input").style.visibility = "visible";
         document.getElementById("custom-drill-input").style.position = "relative";
+        document.getElementById("drill_location_chosen").children[0].style.backgroundColor = "#e0e0e0";
 
         customLocationRequested = true;
     }
@@ -23,6 +24,7 @@ function hideCustomDrillInputField() {
     if (customLocationRequested) {
         document.getElementById("custom-drill-input").style.visibility = "hidden";
         document.getElementById("custom-drill-input").style.position = "absolute";
+        document.getElementById("drill_location_chosen").children[0].style.backgroundColor = "unset";
 
         customLocationRequested = false;
     }

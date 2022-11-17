@@ -47,6 +47,9 @@ public class Drill {
     @Column(name="description")
     private String description;
 
+    @Column(name="color")
+    private String color;
+
     @Type(type = "participants")
     @Column(name = "participants", columnDefinition = "text[]")
     private ArrayList<String> participants;
@@ -132,6 +135,14 @@ public class Drill {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public ArrayList<String> getParticipants() {

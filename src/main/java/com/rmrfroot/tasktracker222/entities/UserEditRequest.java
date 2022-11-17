@@ -1,5 +1,7 @@
 package com.rmrfroot.tasktracker222.entities;
 
+import java.util.ArrayList;
+
 public class UserEditRequest {
 
     public String id;
@@ -13,7 +15,7 @@ public class UserEditRequest {
     public String rank;
     public String workCenter;
     public String flight;
-    public String teams;
+    public ArrayList<String> teams;
 
     public UserEditRequest(){
 
@@ -107,11 +109,11 @@ public class UserEditRequest {
         this.flight = flight;
     }
 
-    public String getTeams() {
+    public ArrayList<String> getTeams() {
         return teams;
     }
 
-    public void setTeams(String teams) {
+    public void setTeams(ArrayList<String> teams) {
         this.teams = teams;
     }
 }
