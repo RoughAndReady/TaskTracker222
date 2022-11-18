@@ -80,6 +80,28 @@ body::-webkit-scrollbar-thumb {
        
        }
 
+ #workCenter{
+        font-family: 'Poppins';
+        font-size: 2.2vh; 
+        /*position: relative;
+        margin: 20px auto;*/
+        width: 100%;
+        border: 1px solid #acc ;
+       /* border-bottom-width: 2px;*/
+       padding-left: 11px;
+       }
+
+       #flight{
+        font-family: 'Poppins';
+        font-size: 2.2vh; 
+        /*position: relative;
+        margin: 20px auto;*/
+        width: 100%;
+        border: 1px solid #acc ;
+       /* border-bottom-width: 2px;*/
+       padding-left: 11px;
+       }
+
 #placeholder{
     color:gray;
 }
