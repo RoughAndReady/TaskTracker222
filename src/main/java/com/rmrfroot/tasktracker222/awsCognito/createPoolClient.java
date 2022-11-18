@@ -66,6 +66,9 @@ public class createPoolClient implements PoolClientInterface {
         request.withUsername(username)
                 .withUserPoolId("us-west-1_NHU41muCf");
         cognitoClient.adminDeleteUser(request);
+        AdminUserGlobalSignOutRequest adminUserGlobalSignOutRequest=new AdminUserGlobalSignOutRequest();
+        adminUserGlobalSignOutRequest.withUsername(username).withUserPoolId("us-west-1_NHU41muCf");
+        cognitoClient.adminUserGlobalSignOut(adminUserGlobalSignOutRequest);
         cognitoClient.shutdown();
         System.out.println("You have deleted the user, the name is "+username);
     }

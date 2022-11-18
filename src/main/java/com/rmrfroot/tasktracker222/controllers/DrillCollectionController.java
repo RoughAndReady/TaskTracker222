@@ -1,6 +1,6 @@
 package com.rmrfroot.tasktracker222.controllers;
 
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
+import com.rmrfroot.tasktracker222.entities.Drill;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

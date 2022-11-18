@@ -37,10 +37,10 @@ public class DrillControllerTests {
     @Test
     public void findDrillSchedulesByIdTest() throws Exception{
 
-        drillSchedules.setId(111);
+        drillSchedules.setId(1);
         drillScheduleServiceImpl.save(drillSchedules);
-        when(drillScheduleServiceImpl.findDrillSchedulesById(111)).thenReturn(drillSchedules);
-        assertEquals(drillSchedules,drillScheduleServiceImpl.findDrillSchedulesById(111));
+        when(drillScheduleServiceImpl.findDrillSchedulesById(1)).thenReturn(drillSchedules);
+        assertEquals(drillSchedules,drillScheduleServiceImpl.findDrillSchedulesById(1));
 
     }
 

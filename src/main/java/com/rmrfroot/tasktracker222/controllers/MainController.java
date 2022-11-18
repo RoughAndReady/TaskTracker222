@@ -9,6 +9,7 @@ package com.rmrfroot.tasktracker222.controllers;
 //import com.rmrfroot.tasktracker222.cognitoClasses.CreateUserPool;
 
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
+import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,6 @@ public class MainController {
             System.out.println("New users just added to database: "+ principal.getName());
         }
         */
-            return "main";
+        return "redirect:/users/accessControl";
     }
 }

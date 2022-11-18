@@ -1,7 +1,5 @@
 package com.rmrfroot.tasktracker222.entities;
 
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
-
 import java.util.ArrayList;
 import java.util.List;
 

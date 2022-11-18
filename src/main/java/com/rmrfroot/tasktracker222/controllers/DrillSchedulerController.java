@@ -2,7 +2,7 @@ package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.entities.Group;
-import com.rmrfroot.tasktracker222.entities.deprecated.Drill;
+import com.rmrfroot.tasktracker222.entities.Drill;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import com.rmrfroot.tasktracker222.validations.ValidateDrill;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,12 +98,7 @@ public class DrillSchedulerController {
 
     @GetMapping("/drill-schedule-manager/createDrill")
     public String createTestDrill(Model model) {
-        //Drill drill = new Drill(event_title, start_date, deadline_date, location, admin_name, officer_email, note, created_timestamp);
         Drill drill = new Drill();
-        drill.setTitle("Test title");
-
-        drill.setOfficerName("Test officer");
-        drill.setDescription("Test description");
 
         model.addAttribute("drill", drill);
         model.addAttribute("editing", false);
@@ -119,26 +114,37 @@ public class DrillSchedulerController {
 
     @GetMapping("/drill-schedule-manager/editDrill/{drill-id}")
     public String editDrill(@PathVariable("drill-id") int id, Model model) {
-        ArrayList<String> locationList = new ArrayList<>();
-        for(int i = 1; i < 10; i++){
-            locationList.add("Location " + i);
-        }
-
         Drill drill = drillDaoService.findById(id);
 
         model.addAttribute("drill", drill);
         model.addAttribute("editing", true);
+        model.addAttribute("drill-id", id);
 
-        model.addAttribute("locations", locationList);
+        model.addAttribute("ranks", Group.getRanks());
+        model.addAttribute("flights", Group.getFlights());
+        model.addAttribute("workcenters", Group.getWorkcenters());
+        model.addAttribute("teams", Group.getTeams());
+        model.addAttribute("locations", Group.getLocations());
+
         return "CreateDrill";
     }
 
 
     @PostMapping("/create-drill")
-    public String createDrill(@ModelAttribute("drills") Drill drill) {
-        System.out.println(drill.getParticipants());
-        drillDaoService.save(drill);
-        return "redirect:/drill-schedule-recipient/drills";
+    public String createDrill(@ModelAttribute("drills") Drill drill, @ModelAttribute("custom-location") String customLocation){
+
+        if(customLocation != null && customLocation.length() > 0){
+            drill.setLocation(customLocation);
+        }
+
+        if(drillDaoService.findById(drill.getId()) == null){
+            drillDaoService.save(drill);
+        }
+        else {
+            drillDaoService.update(drill.getId(), drill);
+        }
+
+        return "redirect:/drill-schedule-manager/editDrill/" + drill.getId();
     }
 
     @PutMapping()

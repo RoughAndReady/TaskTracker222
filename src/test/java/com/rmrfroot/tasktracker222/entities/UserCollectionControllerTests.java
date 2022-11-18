@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class UserControllerTests {
+public class UserCollectionControllerTests {
 
     //@Autowired
     @InjectMocks

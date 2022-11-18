@@ -4,13 +4,16 @@ import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.entities.DrillSchedules;
 import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.User;
-import com.rmrfroot.tasktracker222.entities.UserEditRequest;
 import com.rmrfroot.tasktracker222.services.DrillScheduleService;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
+import com.rmrfroot.tasktracker222.validations.ValidatePassword;
 import com.rmrfroot.tasktracker222.validations.ValidateUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +26,11 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.*;
 
-
+/**
+ * Controller class for User
+ * @author Visoth
+ * @author Noel
+ */
 @Controller
 public class UsersController {
 
@@ -41,42 +48,48 @@ public class UsersController {
         this.usersDaoService = usersDaoService;
     }
 
-
+    /**
+     * Main Page for User Management
+     * shows the list of the users in the system
+     * and allows admin to change an user's attribute
+     * @param model for the model view controller
+     * @return front-end HTML
+     */
     @GetMapping("/users")
     public String getUsersCollection(Model model) {
         List<User> allUsers = usersDaoService.findAll();
         List<User> usersToAdd = new ArrayList<>();
+        User userEditRequest = new User();
 
-        for (User u : allUsers) {
-            if (u.getId() !=  78) {
-                usersToAdd.add(u);
-            }
-        }
-
-        Collections.sort(usersToAdd);
-
-        model.addAttribute("users", usersToAdd);
-        model.addAttribute("userEditRequest", new UserEditRequest());
+        Collections.sort(allUsers);
+        model.addAttribute("users", allUsers);
+        model.addAttribute("userEditRequest", userEditRequest);
 
         model.addAttribute("ranks", Group.getRanks());
         model.addAttribute("flights", Group.getFlights());
         model.addAttribute("workcenters", Group.getWorkcenters());
         model.addAttribute("teams", Group.getTeams());
+        
         return "UserManagement";
     }
 
+    /**
+     * Updates selected user's attributes
+     * @param request User class to be changed
+     * @return to the UserManagement site
+     */
     @PostMapping(value = "/users", params = "submit")
-    public String userEditSubmit(@ModelAttribute("userEditRequest") UserEditRequest request) {
+    public String userEditSubmit(@ModelAttribute("userEditRequest") User request) {
         try {
-            User u = usersDaoService.findById(Integer.parseInt(request.getId()));
+            User u = usersDaoService.findById(request.getId());
 
             // Translate blank values to null since POST does not allow null values
-            if(request.rank.equals(""))
-                request.rank = null;
-            if(request.flight.equals(""))
-                request.flight = null;
-            if(request.workCenter.equals(""))
-                request.workCenter = null;
+            if(request.getRank().equals(""))
+                request.setRank(null);
+            if(request.getFlight().equals(""))
+                request.setFlight(null);
+            if(request.getWorkCenter().equals(""))
+                request.setWorkCenter(null);
 
 
             u.setFirstName(request.getFirstName());
@@ -89,7 +102,7 @@ public class UsersController {
             u.setWorkCenter(request.getWorkCenter());
             u.setFlight(request.getFlight());
             u.setTeams(request.getTeams());   //TODO - Integrate ArrayList-style team list
-            System.out.println(request.getTeams());
+
             usersDaoService.update(u.getId(), u);
 
             return "redirect:/users";
@@ -100,148 +113,72 @@ public class UsersController {
         return null;
     }
 
+    /**
+     * Delete a user in the system
+     * @param request User to be deleted
+     * @return to UserManagement site
+     */
     @PostMapping(value = "/users", params = "delete")
-    public String userEditDelete(@ModelAttribute("userEditRequest") UserEditRequest request) {
-        System.out.println("delete");
-        User u = usersDaoService.findById(Integer.parseInt(request.getId()));
-
-
-        usersDaoService.deleteById(u.getId());
-        //TODO - Add functionality to delete user from database and cognito
-
+    public String userEditDelete(@ModelAttribute("userEditRequest") User request,Principal principal) {
+        //DONE - Add functionality to delete user from database and cognito
+        try{
+            User userById=usersDaoService.findUserByUsername(principal.getName());
+            usersDaoService.deleteById(userById.getId());
+            poolClientInterface.deleteUserByUsername(principal.getName());
+        }catch (Exception e){
+            System.out.println("Something went wrong");
+            return "redirect:/error";
+        }
         return "redirect:/users";
     }
 
 
     @GetMapping("/users/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
-        model.addAttribute("users", usersDaoService.findById(id));
+        model.addAttribute("user", usersDaoService.findById(id));
         return "users";
     }
 
+
     /**
-     *
-     * Skeleton Code for controller access after user login
-     * depending on the role of user (officer or not)
-     *
-     * With having no way of differentiating user from another
-     * can't be used
+     * Determines the User's role
+     * and redirects to a page depending on the role
+     * @param model view controller
+     * @param principal user's credentials
+     * @return a page determined from the user's role
      */
     @GetMapping("users/accessControl")
     public String accessControl(Model model,Principal principal) {
         try {
             User user=usersDaoService.findUserByUsername(principal.getName());
-            model.addAttribute("users", user);
-            DrillSchedules drillSchedules=drillScheduleService.findDrillSchedulesById(59);
-            if(!user.findDrillScheduleById(59)){
-                System.out.println("Something went wrong ");
-                return "redirect:/error";
-            }else if(user.getEmail().equals(drillSchedules.getOfficer_email())) {
+            model.addAttribute("user", user);
+            if(user.isAdmin()) {
                 System.out.println("manager-page");
                 return "redirect:/drill-schedule-manager";
-            } else
-                System.out.println("recipient-page");
-            return "redirect:/drill-schedule-recipient";
-        }catch (Exception e){
-            System.out.println("Something went wrong ");
-            return "redirect:/error";
+            }
+            else{
+               System.out.println("recipient-page");
+                return "redirect:/drill-schedule-recipient";
+            }
+        }
+        catch (Exception e){
+            System.out.println("No user found");
+            return "redirect:/users/newUser";
         }
     }
 
+    /**
+     * Adds a user to the system
+     * @param model view controller
+     * @param principal user's credentials
+     * @return a registration form to collect user's information
+     */
     @GetMapping("/users/newUser")
     public String addUser(Model model,Principal principal) {
+        
         User user = new User();
-        model.addAttribute("users", user);
-        DrillSchedules drillSchedules1=new DrillSchedules(
-               "lorem" ,
-                "start_date",
-                "deadline_date",
-                "location",
-                "admin_name",
-                "officer_email",
-                "note",
-                "create_timestamp"
-        );
-        DrillSchedules drillSchedules2=new DrillSchedules(
-                "lorem" ,
-                "start_date",
-                "deadline_date",
-                "location",
-                "admin_name",
-                "officer_email",
-                "note",
-                "create_timestamp"
-        );
-        ArrayList<String> team =new ArrayList<>();
-        team.add("team1");
-        team.add("team2");
-        User addUser1=new User(
-                "visoth99",
-                "visoth",
-                "cheam",
-                "visoth99@gmail.com",
-                "visothMili@gmail.com",
-                "visothMili@gmail.com",
-                "912431234892349",
-                "23432",
-                "Lorem",
-                "Clafornia branch",
-                "f22",
-                team
-                );
-        User addUser2=new User(
-                "visoth99",
-                "visoth",
-                "cheam",
-                "visoth99@gmail.com",
-                "visothMili@gmail.com",
-                "visothMili@gmail.com",
-                "912431234892349",
-                "23432",
-                "Lorem",
-                "Clafornia branch",
-                "f22",
-                team
-        );
-        User addUserAdmin=new User(
-                "adderUserAdmin",
-                "visoth",
-                "cheam",
-                "visoth99@gmail.com",
-                "visothMili@gmail.com",
-                "visothMili@gmail.com",
-                "912431234892349",
-                "23432",
-                "Lorem",
-                "Clafornia branch",
-                "f22",
-                team
-        );
-        /*drillScheduleService.save(drillSchedules1);
-        drillSchedules1.addUsers(addUser1);
-        drillSchedules1.addUsers(addUser2);
-        usersDaoService.save(addUser1);
-        usersDaoService.save(addUser2);
+        model.addAttribute("newUser", user);
 
-        //create new users and add to exist drill_schedules
-        DrillSchedules drillSchedules=drillScheduleService.findDrillSchedulesById(53);
-        drillSchedules.addUsers(addUser1);
-        drillSchedules.addUsers(addUser2);
-        usersDaoService.save(addUser1);
-        usersDaoService.save(addUser2);
-
-        //exist users with exist drill_schedules
-        DrillSchedules drillSchedules=drillScheduleService.findDrillSchedulesById(54);
-        Users usersExist=usersDaoService.findById(77);
-        drillSchedules.addUsers(usersExist);
-        usersDaoService.save(usersExist);
-
-        //a new drill_schedule with exists an admin user, and recipient users
-        Users usersExist=usersDaoService.findById(77);
-        drillSchedules1.addUsers(usersDaoService.findUsersById(78));
-        drillSchedules1.addUsers(usersDaoService.findUsersById(79));
-        usersExist.addDrillSchedule(drillSchedules1);
-        usersDaoService.save(usersExist);*/
         List<String> userInfoList = poolClientInterface.getUserInfo(principal.getName());
         String email = userInfoList.get(3);
         if (usersDaoService.hasUserData(email)) {
@@ -251,11 +188,19 @@ public class UsersController {
 
     }
 
+    /**
+     * Add a user to the database
+     * @param validateUser confirms user is a new user
+     * @param errors Errors for exception
+     * @param model view controller
+     * @param principal user's credentials
+     * @return to access control
+     */
     @PostMapping("/register")
         public String saveUser(@Valid @ModelAttribute("users")ValidateUser validateUser, BindingResult errors, Model model, Principal principal) {
-        if(errors.hasErrors()){
+        /*if(errors.hasErrors()){
             return "registration_form";
-        }
+        }*/
         try {
             List<String> userInfoList = poolClientInterface.getUserInfo(principal.getName());
             String email = userInfoList.get(3);
@@ -279,23 +224,107 @@ public class UsersController {
                 );
                 System.out.println("New users just added to database: " + principal.getName());
             }else{
-                return "redirect:/";
+                return "redirect:/users/accessControl";
             }
         }catch (Exception e){
             System.out.println("Something went wrong");
             return "redirect:/error";
         }
-            return "redirect:/users";
-        }
+            return "redirect:/users/accessControl";
+    }
 
+    /**
+     * Test controller to see Users collected
+     * @param model view controller
+     * @param workCenter sorts Users by
+     * @return user list
+     */
+
+    @GetMapping("users/workcenter/{workcenter}")
+    public String getUsersByWorkCenter(Model model,@PathVariable("workcenter") String workCenter) {
+        model.addAttribute("user",usersDaoService.findUsersByWorkCenter(workCenter));
+        return "users";
+    }
+
+    /**
+     * Test controller to see Users collected
+     * @param model view controller
+     * @param flight sorts Users by
+     * @return user list
+     */
+    @GetMapping("users/flight/{flight}")
+    public String getUsersByFlight(Model model,@PathVariable("flight") String flight) {
+        model.addAttribute("user",usersDaoService.findUsersByFlight(flight));
+        return "users";
+    }
+
+//    @GetMapping("users/team/{team}")
+//    public String getUsersByTeam(Model model,@PathVariable("team") String team) {
+//        model.addAttribute("user",usersDaoService.findUsersByTeam(team));
+//        return "users";
+//    }
+
+    /**
+     * Test controller to see Users collected
+     * @param model view controller
+     * @param team sorts Users by
+     * @return user list
+     */
+    @GetMapping("users/team/{team}")
+    public String getUsersByTeam(Model model,@PathVariable("team") String team) {
+        model.addAttribute("user",usersDaoService.findUsersByTeam(team));
+        return "users";
+    }
+
+    /**
+     * Generic update User from database
+     * @param id of User to be updated
+     * @param user attributes to replace old data
+     * @return HTML response code of 200
+     */
     @PutMapping("users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") int id, User user) {
 
         return new ResponseEntity<>(usersDaoService.update(id, user), HttpStatus.OK);
     }
 
+    /**
+     * Generic delete a user from database
+     * @param id of user to be deleted
+     */
     @DeleteMapping("users/{id}")
     public void deleteUserById(@PathVariable("id") int id) {
         usersDaoService.deleteById(id);
+    }
+
+    /**
+     * this postmapping have not test on the function testing
+        @author Visoth Cheam
+        @return No template has been created for a change password controller
+     */
+    @PostMapping("/users/changePassword")
+    public String changePassword(@Valid @ModelAttribute("Password") ValidatePassword validatePassword, BindingResult errors,
+                                 Principal principal,@RegisteredOAuth2AuthorizedClient("cognito") OAuth2AuthorizedClient authorizedClient
+                                 ) {
+        if (errors.hasErrors()) {
+            return "updatePassword_form";
+        }else if(!validatePassword.getNewPassword().equals(validatePassword.getOldPassword())){
+            return "updatePassword_form";
+        }
+        try{
+            OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
+            String accessTokenValue= accessToken.getTokenValue();
+            poolClientInterface.updatePassword(
+                    validatePassword.getOldPassword(),
+                    validatePassword.getNewPassword(),
+                    accessTokenValue,
+                    principal.getName()
+            );
+        }catch (Exception e){
+            System.out.println("Something went wrong");
+            return "redirect:/error";
+        }
+
+        return "redirect:/users";
     }
 }

@@ -148,9 +148,9 @@ h3 {
 }
 .top-left {
     background: var(--color-dark-variant);
-    display: flex;    
-    position: fixed;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: 5rem;
     border-bottom: solid var(--text-secondary) 2px;
@@ -186,6 +186,23 @@ h3 {
     height: calc(100% - 5rem);
     margin-top: auto;
     z-index: 1;
+}
+
+/* week selector */
+.week-nav-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: 200ms;
+}
+.week-nav-button:hover {
+    background: var(--color-light);
+    color: var(--color-info-light)
+}
+
+.date input[type="date"] {
+    background: transparent;
 }
 
 /* DEPRECATED: first iteration of week view; switched for grid format

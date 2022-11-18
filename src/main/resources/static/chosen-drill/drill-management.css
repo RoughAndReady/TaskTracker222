@@ -16,7 +16,7 @@
 }
 
 .drill-table {
-    width: 100%;
+    width: 80%;
     /*margin: 10px;*/
     padding: 10px;
 
@@ -82,7 +82,7 @@
 }
 
 .drill-management-table {
-    width: 60%;
+    width: 90%;
     margin-right: 2vw;
 
     display: table;

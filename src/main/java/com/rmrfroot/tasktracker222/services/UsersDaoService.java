@@ -25,4 +25,9 @@ public interface UsersDaoService {
     public void registerUserToDatabase(String userName, String firstName, String lastName, String militaryEmail, String civilianEmail,
                                        String email,String phoneNumber, String officeNumber, String rank, String workCenter,
                                        String flight, ArrayList<String> teams);
+    public List<User> findUsersByWorkCenter(String workCenter);
+
+    public List<User> findUsersByFlight(String flight);
+
+    public List<User> findUsersByTeam(String team);
 }
