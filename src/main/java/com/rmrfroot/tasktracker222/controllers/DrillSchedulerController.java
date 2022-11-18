@@ -57,7 +57,7 @@ public class DrillSchedulerController {
         }
 
 
-        model.addAttribute("drills", drillsToAdd);
+        model.addAttribute("drills", drillsAll);
         return "DrillScheduler";
     }
 

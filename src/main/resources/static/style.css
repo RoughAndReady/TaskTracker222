@@ -455,11 +455,14 @@ li {
     padding: 2rem 8rem 1rem 1rem;
     height: 100%;
 }
+
+
+/* DEPRECATED: only used in first iteration of week view
+
 #detailsSub {
     padding-top: 1.5rem;
 }
 
-/* DEPRECATED: only used in first iteration of week view
 / * sample events * /
 .event1 {
     background-color: var(--color-warning);

@@ -98,8 +98,15 @@
                     </div>
 
                     <div class="event-container">
-                        <div class="slot slot-1">
-                            <span class="event-name">Event A</span>
+                        <div th:each="drill: ${drills}" th:onclick="'updateSelectedDrill(' + ${drill.id} + ');'"
+                             class="slot" th:id="'drill-slot-' + ${drill.id}">
+                            <script th:inline="javascript">
+                                drills = /*[[${drills}]]*/ [];
+                                selectInitialDrill();
+                            </script>
+                        </div>
+                        <div class="slot" th:id="drill-slot-26">
+
                         </div>
                     </div>
                 </div>
@@ -652,31 +659,36 @@
             </div>
             <div class="bottom-right">
                 <div class="titleDiv">
-                    <h1 id="title">Event 1</h1>
+                    <h1 id="drillTitle"></h1>
                 </div>
                 
                 <div class="summaryDiv">
                     <div>
-                        <h2>Time: </h2>
-                        <h3 id="time">Mon 9:00am - 11:00am</h3>
+                        <h2>Date: </h2>
+                        <h3 id="date"></h3>
                     </div>
                     <div>
                         <h2>Location: </h2>
-                        <h3 id="place">Place 1</h3>
+                        <h3 id="location"></h3>
                     </div>
                     <div>
                         <h2>Admin: </h2>
-                        <h3 id="admin">Person 1</h3>
+                        <h3 id="admin_name"></h3>
                     </div>
                     <div>
                         <h2>Participants: </h2>
-                        <h3 id="group">Group 1</h3>
+                        <h3 id="group"></h3>
                     </div>
                 </div>
 
                 <hr>
                 
                 <div class="detailsDiv">
+                    <p id="note"></p>
+
+
+                    <!-- DEPRECATED: old dummy text
+
                     <p id="detailsMain">Lorem ipsum; this is example detail text for an event.
                         There will likely be more sentences or details here,
                         but this is just an example for the sake of demonstration.  Again,
@@ -697,7 +709,7 @@
                     </p>
                     <p id="detailsSub">
                         In the event that there needs to be more info, some separation makes
-                        the text look a little nicer.  
+                        the text look a little nicer.
                         There will likely be more sentences or details here,
                         but this is just an example for the sake of demonstration.  Again,
                         this is for the sake of demonstration.  Again,
@@ -715,7 +727,7 @@
                         of the event details.
 
                         In the event that there needs to be more info, some separation makes
-                        the text look a little nicer.  
+                        the text look a little nicer.
                         There will likely be more sentences or details here,
                         but this is just an example for the sake of demonstration.  Again,
                         this is for the sake of demonstration.  Again,
@@ -723,7 +735,7 @@
                         for the sake of showcasing how information may be displayed.
                         Some sentences may repeat, for the sake of showcasing
                         how information may be displayed.
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </div>
