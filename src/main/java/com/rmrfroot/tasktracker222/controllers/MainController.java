@@ -27,33 +27,38 @@ public class MainController {
     @Autowired
     private UsersDaoService usersDaoService;
 
+//    @GetMapping("/")
+//    public String home(Model model, Principal principal)
+//    {
+//        model.addAttribute("username", principal.getName());
+//        /*List<String> userInfoList=poolClientInterface.getUserInfo(principal.getName());
+//        String email=userInfoList.get(3);
+//        if(!usersDaoService.hasUserData(email)) {
+//            ArrayList<String> teams=new ArrayList<>();
+//            teams.add("team1");
+//            teams.add("team2");
+//            usersDaoService.registerUserToDatabase(
+//                    principal.getName(),
+//                    "visoth",
+//                    "cheam",
+//                    "military@email.com",
+//                    "civil@email.com",
+//                    email,
+//                    "234234",
+//                    "21342314",
+//                    "rank",
+//                    "workcenter",
+//                    "flight",
+//                    teams
+//            );
+//            System.out.println("New users just added to database: "+ principal.getName());
+//        }
+//        */
+//        return "redirect:/users/accessControl";
+//    }
+
     @GetMapping("/")
-    public String home(Model model, Principal principal)
-    {
-        model.addAttribute("username", principal.getName());
-        /*List<String> userInfoList=poolClientInterface.getUserInfo(principal.getName());
-        String email=userInfoList.get(3);
-        if(!usersDaoService.hasUserData(email)) {
-            ArrayList<String> teams=new ArrayList<>();
-            teams.add("team1");
-            teams.add("team2");
-            usersDaoService.registerUserToDatabase(
-                    principal.getName(),
-                    "visoth",
-                    "cheam",
-                    "military@email.com",
-                    "civil@email.com",
-                    email,
-                    "234234",
-                    "21342314",
-                    "rank",
-                    "workcenter",
-                    "flight",
-                    teams
-            );
-            System.out.println("New users just added to database: "+ principal.getName());
-        }
-        */
-        return "redirect:/users/accessControl";
+    public String home(Model model, Principal principal){
+        return "redirect:/drill-schedule-recipient";
     }
 }
