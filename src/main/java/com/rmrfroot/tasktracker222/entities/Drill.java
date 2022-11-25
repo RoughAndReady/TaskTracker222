@@ -20,7 +20,7 @@ import java.util.Date;
         name = "participants",
         typeClass = ListArrayType.class
 )
-public class Drill {
+public class Drill implements Comparable<Drill>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +45,8 @@ public class Drill {
     @Column(name="location")
     private String location;
 
-    @Column(name="officer_name")
-    private String officerName;
+    @Column(name="report_to_id")
+    private Integer reportToID;
 
     @Column(name="description")
     private String description;
@@ -69,23 +69,36 @@ public class Drill {
      * @param startTime drill start time
      * @param endTime drill end time
      * @param location drill location
-     * @param officerName officer in charge of the drill
+     * @param reportToID internal id of point of contact for drill
      * @param description drill description
      * @param participants list of required participants for the drill
      */
-    public Drill(String title, Date date, Date startTime, Date endTime, String location, String officerName,
+    public Drill(String title, Date date, Date startTime, Date endTime, String location, Integer reportToID,
                  String description, ArrayList<String> participants) {
         this.title = title;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
-        this.officerName = officerName;
+        this.reportToID = reportToID;
         this.description = description;
         this.participants = participants;
     }
 
     public Drill(String event_title, String start_date, String deadline_date, String location, String admin_name, String officer_email, String note, String created_timestamp) {
+    }
+
+    @Override public int compareTo(Drill comparedDrill){
+//        if(this.getDate().compareTo(comparedDrill.getDate());
+        Date thisDate = this.getDate();
+        thisDate.setHours(this.startTime.getHours());
+        thisDate.setMinutes(this.startTime.getMinutes());
+
+        Date comparedDate = comparedDrill.getDate();
+        comparedDate.setHours(comparedDrill.getStartTime().getHours());
+        comparedDate.setMinutes(comparedDrill.getStartTime().getMinutes());
+
+        return thisDate.compareTo(comparedDate);
     }
 
     /**
@@ -195,16 +208,16 @@ public class Drill {
      * Gets the name of the officer in charge
      * @return the name of the officer in charge
      */
-    public String getOfficerName() {
-        return officerName;
+    public Integer getReportToID() {
+        return reportToID;
     }
 
     /**
      * Sets the name of the officer in charge
      * @param officerName string consisting of the officer in charge's name
      */
-    public void setOfficerName(String officerName) {
-        this.officerName = officerName;
+    public void setReportToID(Integer officerName) {
+        this.reportToID = officerName;
     }
 
     /**

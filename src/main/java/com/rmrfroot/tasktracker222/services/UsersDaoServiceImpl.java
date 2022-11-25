@@ -18,26 +18,28 @@ import java.util.Optional;
  * This class is a service layer class which handle all the requests that users want to CRUD the database,
  * for every request needs to pass through this class before get into the repository classes because
  * we need to make sure all the requests is safe to send onto the database.
+ *
+ * @author Visoth Cheam
  * @Note @Transactional is Hibernate configure class that allows the Hibernate to verify requests, and
  * make sure there are no problems happen during sending, if anything's happening then the Hibernate
  * will use something called Rollback which will bring back all the data that have been touched by the
  * sending.
- * @author Visoth Cheam
  */
 @Service
 public class UsersDaoServiceImpl implements UsersDaoService {
     @Autowired
     private UsersDao usersDAO;
     @Autowired
-  
+
     private EntityManager entityManager;
 
     private CustomUsersDAO customUsersDAO;
-  
+
     @Override
     public List<User> findAll() {
         return usersDAO.findAll();
     }
+
     //find the user by ID from the database
     @Override
     public User findById(int theId) {
@@ -79,10 +81,10 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
 
-            if(!user.getMilitaryEmail().isBlank())
+            if (!user.getMilitaryEmail().isBlank())
                 updatedUser.setMilitaryEmail(user.getMilitaryEmail());
 
-            if(!user.getCivilianEmail().isBlank())
+            if (!user.getCivilianEmail().isBlank())
                 updatedUser.setCivilianEmail(user.getCivilianEmail());
             updatedUser.setPhoneNumber(user.getPhoneNumber());
             updatedUser.setOfficeNumber(user.getOfficeNumber());
@@ -92,16 +94,20 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             updatedUser.setTeams(user.getTeams());
             usersDAO.save(updatedUser);
             return updatedUser;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
     //save or update the user from the database
     @Override
     @Transactional
     public void save(User user) {
+        //If database is empty, first user added will be an admin
+        if(usersDAO.findAll().isEmpty())
+            user.setAdmin(true);
+
         usersDAO.save(user);
     }
 
@@ -109,17 +115,17 @@ public class UsersDaoServiceImpl implements UsersDaoService {
     @Override
     @Transactional
     public Boolean hasUserData(String email) {
-        Session cSession=entityManager.unwrap(Session.class);
-        Query<User> query=cSession.createQuery("from User where email=:email", User.class);
-        query.setParameter("email",email);
-        Boolean check=false;
-        List<User> list=query.getResultList();
-        try{
-            if(list.size()>0) {
-                check=true;
+        Session cSession = entityManager.unwrap(Session.class);
+        Query<User> query = cSession.createQuery("from User where email=:email", User.class);
+        query.setParameter("email", email);
+        Boolean check = false;
+        List<User> list = query.getResultList();
+        try {
+            if (list.size() > 0) {
+                check = true;
             }
-        }catch (Exception e){
-            check=false;
+        } catch (Exception e) {
+            check = false;
         }
         return check;
     }
@@ -127,15 +133,15 @@ public class UsersDaoServiceImpl implements UsersDaoService {
     //find the user by Username from the database
     @Override
     public User findUserByUsername(String username) {
-        Session cSession=entityManager.unwrap(Session.class);
-        Query<User> query=cSession.createQuery("from User where userName=:username", User.class);
-        query.setParameter("username",username);
+        Session cSession = entityManager.unwrap(Session.class);
+        Query<User> query = cSession.createQuery("from User where userName=:username", User.class);
+        query.setParameter("username", username);
 
         User user;
-        try{
-            user=query.getSingleResult();
-        }catch (Exception e){
-            user=null;
+        try {
+            user = query.getSingleResult();
+        } catch (Exception e) {
+            user = null;
         }
         return user;
     }
@@ -143,16 +149,16 @@ public class UsersDaoServiceImpl implements UsersDaoService {
     //find the user by Email from the database
     @Override
     @Transactional
-    public User findUserByEmail(String email){
-        Session cSession=entityManager.unwrap(Session.class);
-        Query<User> query=cSession.createQuery("from User where email=:email", User.class);
-        query.setParameter("email",email);
+    public User findUserByEmail(String email) {
+        Session cSession = entityManager.unwrap(Session.class);
+        Query<User> query = cSession.createQuery("from User where email=:email", User.class);
+        query.setParameter("email", email);
 
-        User user=null;
-        try{
-            user=query.getSingleResult();
-        }catch (Exception e){
-            user=null;
+        User user = null;
+        try {
+            user = query.getSingleResult();
+        } catch (Exception e) {
+            user = null;
         }
         return user;
     }
@@ -161,15 +167,15 @@ public class UsersDaoServiceImpl implements UsersDaoService {
     @Override
     @Transactional
     public User findUsersById(int id) {
-        Session cSession=entityManager.unwrap(Session.class);
-        Query<User> query=cSession.createQuery("from User where id=:id", User.class);
-        query.setParameter("id",id);
+        Session cSession = entityManager.unwrap(Session.class);
+        Query<User> query = cSession.createQuery("from User where id=:id", User.class);
+        query.setParameter("id", id);
 
-        User user=null;
-        try{
-            user=query.getSingleResult();
-        }catch (Exception e){
-            user=null;
+        User user = null;
+        try {
+            user = query.getSingleResult();
+        } catch (Exception e) {
+            user = null;
         }
         return user;
     }
@@ -178,9 +184,9 @@ public class UsersDaoServiceImpl implements UsersDaoService {
     @Override
     @Transactional
     public void registerUserToDatabase(String userName, String firstName, String lastName, String militaryEmail, String civilianEmail,
-                                       String email,String phoneNumber, String officeNumber, String rank, String workCenter,
+                                       String email, String phoneNumber, String officeNumber, String rank, String workCenter,
                                        String flight, ArrayList<String> teams) {
-        User user =new User(userName, firstName, lastName, militaryEmail, civilianEmail,email,
+        User user = new User(userName, firstName, lastName, militaryEmail, civilianEmail, email,
                 phoneNumber, officeNumber, rank, workCenter,
                 flight, teams);
         usersDAO.save(user);
@@ -188,15 +194,14 @@ public class UsersDaoServiceImpl implements UsersDaoService {
 
     @Override
     public List<User> findUsersByWorkCenter(String workCenter) {
-        Session cSession=entityManager.unwrap(Session.class);
-        Query<User> query=cSession.createQuery("from User where workCenter = :workCenter", User.class);
+        Session cSession = entityManager.unwrap(Session.class);
+        Query<User> query = cSession.createQuery("from User where workCenter = :workCenter", User.class);
         query.setParameter("workCenter", workCenter);
 
         List<User> users;
         try {
             users = query.getResultList();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             users = null;
         }
         return users;
@@ -204,15 +209,14 @@ public class UsersDaoServiceImpl implements UsersDaoService {
 
     @Override
     public List<User> findUsersByFlight(String flight) {
-        Session cSession=entityManager.unwrap(Session.class);
-        Query<User> query=cSession.createQuery("from User where flight = :flight", User.class);
+        Session cSession = entityManager.unwrap(Session.class);
+        Query<User> query = cSession.createQuery("from User where flight = :flight", User.class);
         query.setParameter("flight", flight);
 
         List<User> users;
         try {
             users = query.getResultList();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             users = null;
         }
         return users;
@@ -220,16 +224,15 @@ public class UsersDaoServiceImpl implements UsersDaoService {
 
     @Override
     public List<User> findUsersByTeam(String team) {
-        Session cSession=entityManager.unwrap(Session.class);
+        Session cSession = entityManager.unwrap(Session.class);
 
-        Query<User> query= cSession.createQuery("from User where cast(teams as string) like concat('%',:team,'%') ", User.class);
+        Query<User> query = cSession.createQuery("from User where cast(teams as string) like concat('%',:team,'%') ", User.class);
         query.setParameter("team", team);
 
         List<User> users;
         try {
             users = query.getResultList();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             users = null;
         }
         return users;

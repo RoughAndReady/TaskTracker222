@@ -115,7 +115,8 @@ public class DrillDaoImpl implements DrillDaoService{
         updatedDrill.setStartTime(drill.getStartTime());
         updatedDrill.setEndTime(drill.getEndTime());
         updatedDrill.setLocation(drill.getLocation());
-        updatedDrill.setOfficerName(drill.getOfficerName());
+        updatedDrill.setReportToID(drill.getReportToID());
+        updatedDrill.setParticipants(drill.getParticipants());
         updatedDrill.setDescription(drill.getDescription());
         drillDAO.save(updatedDrill);
         return updatedDrill;

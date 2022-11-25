@@ -4,7 +4,6 @@ import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.dao.CustomUsersDAO;
 import com.rmrfroot.tasktracker222.dao.UsersDao;
 import com.rmrfroot.tasktracker222.entities.User;
-import com.rmrfroot.tasktracker222.entities.UserEditRequest;
 import com.rmrfroot.tasktracker222.services.DrillScheduleService;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import org.hamcrest.Matchers;
@@ -71,8 +70,6 @@ class UsersControllerTest {
     MockMvc mockMvc;
 
     private java.util.ArrayList<String> teamList =new ArrayList<>(Arrays.asList("team1", "team2"));
-
-    private UserEditRequest userEditRequest;
 
     @Before
     public void setup() {
