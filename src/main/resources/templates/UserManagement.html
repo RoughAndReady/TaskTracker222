@@ -36,7 +36,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href= "/drill-schedule-manager/createDrill" class="item-link">
+            <a href= "/drill-schedule-manager" class="item-link">
                   <span class="material-symbols-outlined">
                      <i class="las la-tasks"></i>
                    </span>
@@ -44,7 +44,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="/users" class="item-link">
+            <a href="/user-manager" class="item-link">
                     <span class="material-symbols-outlined">
                          <i class="las la-users-cog"></i>
                     </span>
@@ -52,7 +52,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="#" class="item-link">
+            <a href="/logout" class="item-link">
                 <span class="material-symbols-outlined">logout</span>
                 <span class="item-text">Log Out</span>
             </a>
@@ -109,7 +109,7 @@
         <div class="bottom-right user-editor-div">
             <div class="user-management-editor-div">
 
-                <form class="user-management-table-form" autocomplete="off" th:action="@{/users}" th:object="${userEditRequest}"
+                <form class="user-management-table-form" autocomplete="off" th:action="@{/user-manager}" th:object="${userEditRequest}"
                       method="post">
                     <table class="user-management-table">
                         <tr>

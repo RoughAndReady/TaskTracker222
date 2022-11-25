@@ -55,13 +55,35 @@ public class UsersController {
      * @param model for the model view controller
      * @return front-end HTML
      */
-    @GetMapping("/users")
-    public String getUsersCollection(Model model) {
+    @GetMapping("/user-manager")
+    public String getUsersCollection(Model model, Principal principal) {
+
+        /*
+            If user exists and is admin, proceed.
+            If user exists and is not admin, redirect to drill schedule.
+            if user does not exist, redirect to new user registration.
+         */
+        try{
+            if(!usersDaoService.findUserByUsername(principal.getName()).isAdmin()){
+                return "redirect:/drill-schedule-recipient";
+            }
+        } catch (NullPointerException n) {
+            return "redirect:/new-user-registration";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         List<User> allUsers = usersDaoService.findAll();
-        List<User> usersToAdd = new ArrayList<>();
         User userEditRequest = new User();
 
-        Collections.sort(allUsers);
+        try {
+            Collections.sort(allUsers);
+        } catch (Exception e){
+            System.out.println("Could not sort user list.");
+            e.printStackTrace();
+        }
+
         model.addAttribute("users", allUsers);
         model.addAttribute("userEditRequest", userEditRequest);
 
@@ -69,7 +91,7 @@ public class UsersController {
         model.addAttribute("flights", Group.getFlights());
         model.addAttribute("workcenters", Group.getWorkcenters());
         model.addAttribute("teams", Group.getTeams());
-        
+
         return "UserManagement";
     }
 
@@ -78,7 +100,7 @@ public class UsersController {
      * @param request User class to be changed
      * @return to the UserManagement site
      */
-    @PostMapping(value = "/users", params = "submit")
+    @PostMapping(value = "/user-manager", params = "submit")
     public String userEditSubmit(@ModelAttribute("userEditRequest") User request) {
         try {
             User u = usersDaoService.findById(request.getId());
@@ -90,6 +112,8 @@ public class UsersController {
                 request.setFlight(null);
             if(request.getWorkCenter().equals(""))
                 request.setWorkCenter(null);
+            if(request.getTeams().isEmpty())
+                request.setTeams(null);
 
 
             u.setFirstName(request.getFirstName());
@@ -101,11 +125,11 @@ public class UsersController {
             u.setRank(request.getRank());
             u.setWorkCenter(request.getWorkCenter());
             u.setFlight(request.getFlight());
-            u.setTeams(request.getTeams());   //TODO - Integrate ArrayList-style team list
+            u.setTeams(request.getTeams());
 
             usersDaoService.update(u.getId(), u);
 
-            return "redirect:/users";
+            return "redirect:/user-manager";
         }
         catch(Exception e){
             e.printStackTrace();
@@ -118,27 +142,19 @@ public class UsersController {
      * @param request User to be deleted
      * @return to UserManagement site
      */
-    @PostMapping(value = "/users", params = "delete")
-    public String userEditDelete(@ModelAttribute("userEditRequest") User request,Principal principal) {
-        //DONE - Add functionality to delete user from database and cognito
+    @PostMapping(value = "/user-manager", params = "delete")
+    public String userEditDelete(@ModelAttribute("userEditRequest") User request, Principal principal) {
         try{
-            User userById=usersDaoService.findUserByUsername(principal.getName());
-            usersDaoService.deleteById(userById.getId());
-            poolClientInterface.deleteUserByUsername(principal.getName());
+            User userToDelete = usersDaoService.findUsersById(request.getId());
+
+            usersDaoService.deleteById(userToDelete.getId());
+            poolClientInterface.deleteUserByUsername(userToDelete.getUserName());
         }catch (Exception e){
-            System.out.println("Something went wrong");
+            e.printStackTrace();
             return "redirect:/error";
         }
-        return "redirect:/users";
+        return "redirect:/user-manager";
     }
-
-
-    @GetMapping("/users/{id}")
-    public String findById(@PathVariable("id") int id, Model model) {
-        model.addAttribute("user", usersDaoService.findById(id));
-        return "users";
-    }
-
 
     /**
      * Determines the User's role
@@ -173,7 +189,7 @@ public class UsersController {
      * @param principal user's credentials
      * @return a registration form to collect user's information
      */
-    @GetMapping("/users/newUser")
+    @GetMapping("/new-user-registration")
     public String addUser(Model model,Principal principal) {
         
         User user = new User();
@@ -233,6 +249,13 @@ public class UsersController {
             return "redirect:/users/accessControl";
     }
 
+
+    @GetMapping("/users/{id}")
+    public String findById(@PathVariable("id") int id, Model model) {
+        model.addAttribute("user", usersDaoService.findById(id));
+        return "users";
+    }
+
     /**
      * Test controller to see Users collected
      * @param model view controller
@@ -258,12 +281,6 @@ public class UsersController {
         return "users";
     }
 
-//    @GetMapping("users/team/{team}")
-//    public String getUsersByTeam(Model model,@PathVariable("team") String team) {
-//        model.addAttribute("user",usersDaoService.findUsersByTeam(team));
-//        return "users";
-//    }
-
     /**
      * Test controller to see Users collected
      * @param model view controller
@@ -274,27 +291,6 @@ public class UsersController {
     public String getUsersByTeam(Model model,@PathVariable("team") String team) {
         model.addAttribute("user",usersDaoService.findUsersByTeam(team));
         return "users";
-    }
-
-    /**
-     * Generic update User from database
-     * @param id of User to be updated
-     * @param user attributes to replace old data
-     * @return HTML response code of 200
-     */
-    @PutMapping("users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") int id, User user) {
-
-        return new ResponseEntity<>(usersDaoService.update(id, user), HttpStatus.OK);
-    }
-
-    /**
-     * Generic delete a user from database
-     * @param id of user to be deleted
-     */
-    @DeleteMapping("users/{id}")
-    public void deleteUserById(@PathVariable("id") int id) {
-        usersDaoService.deleteById(id);
     }
 
     /**

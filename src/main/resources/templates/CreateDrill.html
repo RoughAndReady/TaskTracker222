@@ -25,11 +25,11 @@
 </head>
 
 <script th:inline="javascript">
-    drill = [[${drill}]];
-    editing = [[${editing}]];
+    // drill = [[${drill}]];
+    // preselect_id = [[${preselect_id}]];
 </script>
 
-<body class="body-container" onload="initDrillEditor()">
+<body class="body-container" onload="selectInitialDrill();">
 
 <aside class="sidebar">
     <ul class="sidebar-list">
@@ -42,7 +42,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href= "/drill-schedule-manager/createDrill" class="item-link">
+            <a href= "/drill-schedule-manager" class="item-link">
                   <span class="material-symbols-outlined">
                      <i class="las la-tasks"></i>
                    </span>
@@ -50,7 +50,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="/users" class="item-link">
+            <a href="/user-manager" class="item-link">
                     <span class="material-symbols-outlined">
                          <i class="las la-users-cog"></i>
                     </span>
@@ -58,7 +58,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="#" class="item-link">
+            <a href="/logout" class="item-link">
                 <span class="material-symbols-outlined">logout</span>
                 <span class="item-text">Log Out</span>
             </a>
@@ -74,7 +74,49 @@
         <div class="top-left">
             <h1>Event List</h1>
         </div>
-        <div class="bottom-left"></div>
+        <div class="bottom-left">
+            <table class="drill-table">
+                <thead class="drill-table-header">
+                <tr>
+                    <th class="drill-table-header-entry">Title</th>
+                    <th class="drill-table-header-entry"></th>
+                    <th class="drill-table-header-entry">Date</th>
+                    <th class="drill-table-header-entry">Time</th>
+                    <th class="drill-table-header-entry">Location</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="drill: ${drills}" th:onclick="'updateSelectedDrill(' + ${drill.id} + ');'"
+                    class="drill-table-row"
+                    th:id="'drill-list-row-' + ${drill.id}">
+                    <script th:inline="javascript">
+                        drills = /*[[${drills}]]*/ [];
+                        users = /*[[${users}]]*/ [];
+                        drillManagementSetup();
+                    </script>
+
+                    <td th:text="${drill.title}"
+                        class="drill-table-entry" colspan="2"></td>
+
+                    <td th:if="${drill.id >= 0}" th:text="${#strings.substring(drill.date,0,10)}"
+                        class="drill-table-entry"></td>
+                    <td th:unless="${drill.id >= 0}"
+                        class="drill-table-entry"></td>
+
+                    <td th:if="${drill.id >= 0}" th:text="${#strings.substring(drill.startTime,11,16)} + '-' + ${#strings.substring(drill.endTime,11,16)}"
+                        class="drill-table-entry"></td>
+                    <td th:unless="${drill.id >= 0}"
+                        class="drill-table-entry"></td>
+
+                    <td th:if="${drill.id >= 0}" th:text="${drill.location}"
+                        class="drill-table-entry"></td>
+                    <td th:unless="${drill.id >= 0}"
+                        class="drill-table-entry"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="right">
@@ -85,7 +127,7 @@
 
         <div class="bottom-right drill-editor-div drill-management-editor-div">
 
-                <form th:action="@{/create-drill}" th:object="${newDrill}" method="post" id="drill-creation-form"
+                <form th:action="@{/edit-drill}" th:object="${newDrill}" method="post" id="drill-creation-form"
                       class="drill-management-table-form" autocomplete="off">
 
                     <table class="drill-management-table">
@@ -93,7 +135,7 @@
                             <th class="drill-management-entry">Title</th>
                             <td class="drill-management-value-cell">
                                 <input id="drill-title" class="drill-management-value" type="text"
-                                       th:name="title">
+                                       th:name="title" placeholder="Enter title...">
                             </td>
                         </tr>
 
@@ -101,7 +143,7 @@
                             <th class="drill-management-entry">Color</th>
                             <td class="drill-management-value-cell">
                                 <select id='drill-color' class="drill-management-value" th:name="color">
-                                    <option selected disabled style="display: none">Select one...</option>
+                                    <option selected disabled style="display: none" value="-1">Select one...</option>
                                     <option style="background-color: #F89EB9" value="#F89EB9">Red</option>
                                     <option style="background-color: #ECD583" value="#ECD583">Yellow</option>
                                     <option style="background-color: #AEE583" value="#AEE583">Green</option>
@@ -113,7 +155,10 @@
                         <tr>
                             <th class="drill-management-entry">Date</th>
                             <td class="drill-management-value-cell">
-                                <input id="drill-date" class="drill-management-value" type="date" th:name="date">
+                                <input id="drill-date" class="drill-management-value" type="date"
+                                       onfocus="(this.type='date')"
+                                       onblur="if(this.value == null || this.value.length < 1) {this.type='text'}"
+                                       th:name="date" placeholder="Choose date...">
                             </td>
                         </tr>
 
@@ -121,7 +166,7 @@
                             <th class="drill-management-entry">Start Time</th>
                             <td class="drill-management-value-cell">
                                 <input type="text" class="drill-management-value" required id="drill-start-time"
-                                       th:name="startTime">
+                                       th:name="startTime" placeholder="Choose start time...">
                                 <script>
                                     $(document).ready(function () {
                                         $("#drill-start-time").timepicker({
@@ -135,19 +180,12 @@
                                             scrollbar: true,
 
                                             change: function (time) {
-                                                console.log("Time updated");
-
                                                 var startHour = parseInt($('#drill-start-time').val().substring(0, 2));
                                                 var startMinutes = parseInt($('#drill-start-time').val().substring(3, 8)) + 15;
                                                 var endMinTime = (startHour).toString().concat(':' + startMinutes);
 
                                                 $('#drill-end-time').timepicker('option', 'minTime', endMinTime);
                                                 $('#drill-end-time').timepicker('setTime', endMinTime);
-
-                                                // console.log(parseInt($('#drill-start-time').val().substring(0, 2)));
-                                                // $("#drill-end-time").timepicker('option',{
-                                                //     'minHour': this.hour
-                                                // });
                                             }
                                         });
                                     });
@@ -159,7 +197,7 @@
                             <th class="drill-management-entry">End Time</th>
                             <td class="drill-management-value-cell">
                                 <input type="text" class="drill-management-value" required id="drill-end-time"
-                                       th:name="endTime">
+                                       th:name="endTime" placeholder="Choose end time...">
                                 <script>
                                     $(document).ready(function () {
                                         $("#drill-end-time").timepicker({
@@ -181,10 +219,10 @@
                             <th class="drill-management-entry">Location</th>
                             <td class="drill-management-value-cell">
                                 <select id="drill-location" name="drill-location" class="drill-management-value"
-                                        th:name="location">-->
+                                        th:name="location">
                                     <option selected disabled style="display: none">Select location...</option>
                                     <option onclick="showCustomDrillInputField()" id="custom-location-option"
-                                            class="drill-custom-location-text">Enter custom location
+                                            class="drill-custom-location-text">Custom location
                                     </option>
                                     <option onclick="hideCustomDrillInputField()" th:each="location: ${locations}"
                                             th:value="${location}"
@@ -193,17 +231,16 @@
 
                                 <input id="custom-drill-input" class="drill-management-value"
                                        style="visibility: hidden; position: absolute"
-                                       type="text" placeholder="Custom location" th:name="custom-location">
+                                       type="text" placeholder="Enter custom location..." th:name="custom-location">
                             </td>
                         </tr>
 
                         <tr>
                             <th class="drill-management-entry">Report To</th>
                             <td class="drill-management-value-cell">
-                                <select id='add-drill-officers' class="drill-management-value" th:name="officerName">
-                                    <option selected disabled style="display: none">Select one...</option>
-                                    <option>Officer 1</option>
-                                    <option>Officer 2</option>
+                                <select id='drill-report-to' class="drill-management-value" th:name="reportToID">
+                                    <option selected disabled style="display: none" value="-1">Select one...</option>
+                                    <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
                                 </select>
                             </td>
                         </tr>
@@ -211,7 +248,7 @@
                         <tr>
                             <th class="drill-management-entry">Participants</th>
                             <td class="drill-management-value-cell">
-                                <select multiple id='add-drill-participants' class="drill-management-value"
+                                <select multiple id='drill-participants' class="drill-management-value"
                                         th:name="participants">-->
                                     <optgroup label="Rank">
                                         <option th:each="rank : ${ranks}" th:value="${rank}" th:text="${rank}"></option>
@@ -226,6 +263,9 @@
                                     </optgroup>
                                     <optgroup label="Team">
                                         <option th:each="team : ${teams}" th:value="${team}" th:text="${team}"></option>
+                                    </optgroup>
+                                    <optgroup label="Users">
+                                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
                                     </optgroup>
                                 </select>
                             </td>
@@ -264,18 +304,18 @@
                 $('#drill-location').attr("data-placeholder", "Choose location...").chosen();
                 $('#drill-location').css(select_field_css);
                 $('#drill-location').on('change', function () {
-                    if ($(this).val() === "Enter custom location") {
+                    if ($(this).val() === "Custom location") {
                         showCustomDrillInputField();
                     } else {
                         hideCustomDrillInputField()
                     }
                 })
 
-                $('#add-drill-participants').attr("data-placeholder", "Choose participants...").chosen();
-                $('#add-drill-participants').css(select_field_css);
+                $('#drill-participants').attr("data-placeholder", "Choose participants...").chosen();
+                $('#drill-participants').css(select_field_css);
 
-                $('#add-drill-officers').chosen();
-                $('#add-drill-officers').css(select_field_css);
+                $('#drill-report-to').chosen();
+                $('#drill-report-to').css(select_field_css);
 
                 if(customLocationRequested) {
                     document.getElementById("drill_location_chosen").children[0].style.backgroundColor = "#e0e0e0";

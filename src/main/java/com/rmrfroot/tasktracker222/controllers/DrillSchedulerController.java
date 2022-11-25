@@ -3,7 +3,9 @@ package com.rmrfroot.tasktracker222.controllers;
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.Drill;
+import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
+import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import com.rmrfroot.tasktracker222.validations.ValidateDrill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,18 +21,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
 @Controller
 public class DrillSchedulerController {
-
-    //get day collection singleton
-
-    // ONLY GetMapping works for now
-    // because front end has no way of importing data into the database
     @Autowired
     private DrillDaoService drillDaoService;
+
+    @Autowired
+    private UsersDaoService usersDaoService;
 
     @Autowired
     private PoolClientInterface poolClientInterface;
@@ -45,7 +47,22 @@ public class DrillSchedulerController {
      * Only shows drills that are assigned to them.
      */
     @GetMapping("/drill-schedule-recipient")
-    public String drillScheduleRecipient(Model model) {
+    public String drillScheduleRecipient(Model model, Principal principal) {
+
+        /*
+            If user exists, add admin status to model.
+            if user does not exist, redirect to new user registration.
+         */
+        try{
+            model.addAttribute("isAdmin",
+                    usersDaoService.findUserByUsername(principal.getName()).isAdmin());
+        } catch (NullPointerException n) {
+            return "redirect:/new-user-registration";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         List<Drill> drillsToAdd = new ArrayList<>();
         List<Drill> drillsAll = drillDaoService.findAll();
 
@@ -61,64 +78,51 @@ public class DrillSchedulerController {
         return "DrillScheduler";
     }
 
-    /**
-     * For use by a schedule manager.
-     * Shows all scheduled drills that are assigned to officer.
-     */
     @GetMapping("/drill-schedule-manager")
-    public String drillScheduleManager(Model model) {
-        List<Drill> drillsToAdd = new ArrayList<>();
-        List<Drill> drillsAll = drillDaoService.findAll();
+    public String createTestDrill(Model model, Principal principal) {
 
-        String username = getUsername();
-        for (Drill drill : drillsAll) {
-            /*
-                TODO: Update to use username field instead of officer name
-            */
-            if (drill.getOfficerName().equals(username)) {
-                drillsToAdd.add(drill);
+        /*
+            If user exists and is admin, proceed.
+            If user exists and is not admin, redirect to drill schedule.
+            if user does not exist, redirect to new user registration.
+         */
+        try{
+            if(!usersDaoService.findUserByUsername(principal.getName()).isAdmin()){
+                return "redirect:/drill-schedule-recipient";
             }
+        } catch (NullPointerException n) {
+            return "redirect:/new-user-registration";
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
-        model.addAttribute("drills", drillsToAdd);
-        return "DrillScheduler";
-    }
+        Drill drillEditRequest = new Drill();
+        List<Drill> allDrills = drillDaoService.findAll();
 
-    @GetMapping("/drill-schedule-recipient/drills")                       // made a drills.html to check if scheduler
-    public String getDrillCollection(Model model) {                          // is able to retrieve database
-        model.addAttribute("drills", drillDaoService.findAll());
-        return "drills";
-    }
+        /*
+            Sort drills by date + start time
+            See compareTo() implementation in Drill to modify this behavior
+         */
+        try {
+            Collections.sort(allDrills);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
-    @GetMapping("/drill-schedule-recipient/drills/{id}")
-    public String findDrillById(@PathVariable("id") int id, Model model) {
-        model.addAttribute("drills", drillDaoService.findById(id));
-        return "drills";
-    }
+        /*
+            Add a placeholder drill that will be used to create a new drill if requested
+         */
+        Drill newDrillRequest = new Drill();
+        newDrillRequest.setTitle("+ New Drill");
+        newDrillRequest.setId(-2);
+        allDrills.add(0, newDrillRequest);
 
-    @GetMapping("/drill-schedule-manager/createDrill")
-    public String createTestDrill(Model model) {
-        Drill drill = new Drill();
 
-        model.addAttribute("drill", drill);
-        model.addAttribute("editing", false);
+        model.addAttribute("drill", drillEditRequest);
+        model.addAttribute("drills", allDrills);
 
-        model.addAttribute("ranks", Group.getRanks());
-        model.addAttribute("flights", Group.getFlights());
-        model.addAttribute("workcenters", Group.getWorkcenters());
-        model.addAttribute("teams", Group.getTeams());
-        model.addAttribute("locations", Group.getLocations());
-
-        return "CreateDrill";
-    }
-
-    @GetMapping("/drill-schedule-manager/editDrill/{drill-id}")
-    public String editDrill(@PathVariable("drill-id") int id, Model model) {
-        Drill drill = drillDaoService.findById(id);
-
-        model.addAttribute("drill", drill);
-        model.addAttribute("editing", true);
-        model.addAttribute("drill-id", id);
+        model.addAttribute("users", usersDaoService.findAll());
 
         model.addAttribute("ranks", Group.getRanks());
         model.addAttribute("flights", Group.getFlights());
@@ -129,9 +133,8 @@ public class DrillSchedulerController {
         return "CreateDrill";
     }
 
-
-    @PostMapping("/create-drill")
-    public String createDrill(@ModelAttribute("drills") Drill drill, @ModelAttribute("custom-location") String customLocation){
+    @PostMapping(value = "/edit-drill", params = "submit")
+    public String editDrill(@ModelAttribute("drill") Drill drill, @ModelAttribute("custom-location") String customLocation){
 
         if(customLocation != null && customLocation.length() > 0){
             drill.setLocation(customLocation);
@@ -144,18 +147,19 @@ public class DrillSchedulerController {
             drillDaoService.update(drill.getId(), drill);
         }
 
-        return "redirect:/drill-schedule-manager/editDrill/" + drill.getId();
+        return "redirect:/drill-schedule-manager";
     }
 
-    @PutMapping()
-    public ResponseEntity<Drill> updateDrill(@PathVariable("id") int id, Drill drill) {
-
-        return new ResponseEntity<>(drillDaoService.update(id, drill), HttpStatus.OK);
-    }
-
-    @DeleteMapping()
-    public void deleteDrillById(@PathVariable("id") int id) {
-        drillDaoService.deleteById(id);
+    @PostMapping(value = "/edit-drill", params = "delete")
+    public String deleteDrill(@ModelAttribute("drill") Drill request) {
+        try{
+            Drill drillToDelete = drillDaoService.findById(request.getId());
+            drillDaoService.deleteById(drillToDelete.getId());
+        }catch (Exception e){
+            System.out.println("Could not delete drill");
+            return "redirect:/error";
+        }
+        return "redirect:/drill-schedule-manager";
     }
 
     /**
@@ -169,39 +173,6 @@ public class DrillSchedulerController {
         }
 
         return null;
-    }
-
-    @PostMapping("/register-drill")
-    public String saveDrill(@Valid @ModelAttribute("drills") ValidateDrill validateDrill, BindingResult errors, Model model, Principal principal) {
-        if(errors.hasErrors()){
-            return "registration_form";
-        }
-        try {
-            //List<String> drillInfoList = poolClientInterface.getDrillInfo(principal.getName());
-            List<String> drillInfoList = new ArrayList<>();
-            String title = drillInfoList.get(0);
-            if (!drillDaoService.hasDrillData(title)) {
-                drillDaoService.registerDrillToDatabase(
-                        principal.getName(),
-                        validateDrill.getEvent_title(),
-                        validateDrill.getStart_date(),
-                        validateDrill.getDeadline_date(),
-                        validateDrill.getLocation(),
-                        title,
-                        validateDrill.getAdmin_name(),
-                        validateDrill.getOfficer_email(),
-                        validateDrill.getCreated_timestamp(),
-                        validateDrill.getNote()
-                );
-                System.out.println("New drill just added to database: " + principal.getName());
-            }else{
-                return "redirect:/";
-            }
-        }catch (Exception e){
-            System.out.println("Something went wrong");
-            return "redirect:/error";
-        }
-        return "redirect:/drill";
     }
 
 }

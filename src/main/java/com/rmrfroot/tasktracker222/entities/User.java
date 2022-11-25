@@ -560,6 +560,9 @@ public class User implements Comparable<User>{
         return check;
     }
 
+    public void setAdmin(boolean toSet){
+        this.admin = toSet;
+    }
     public boolean isAdmin() {
         return admin;
     }
