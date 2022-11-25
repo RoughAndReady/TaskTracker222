@@ -1,7 +1,6 @@
 package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
-import com.rmrfroot.tasktracker222.entities.DrillSchedules;
 import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.services.DrillScheduleService;
@@ -9,8 +8,6 @@ import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import com.rmrfroot.tasktracker222.validations.ValidatePassword;
 import com.rmrfroot.tasktracker222.validations.ValidateUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -20,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,7 +28,7 @@ import java.util.*;
  * @author Noel
  */
 @Controller
-public class UsersController {
+public class UserController {
 
     @Autowired
     private UsersDaoService usersDaoService;
@@ -43,7 +39,7 @@ public class UsersController {
     @Autowired
     private PoolClientInterface poolClientInterface;
 
-    public UsersController(UsersDaoService usersDaoService) {
+    public UserController(UsersDaoService usersDaoService) {
         super();
         this.usersDaoService = usersDaoService;
     }
@@ -322,5 +318,17 @@ public class UsersController {
         }
 
         return "redirect:/users";
+    }
+
+    @GetMapping("/registration-dev")
+    public String registrationTest(Model model, Principal principal){
+        User user = new User();
+        model.addAttribute("newUser", user);
+
+        model.addAttribute("ranks", Group.getRanks());
+        model.addAttribute("flights", Group.getFlights());
+        model.addAttribute("workcenters", Group.getWorkcenters());
+
+        return "registration_form";
     }
 }
