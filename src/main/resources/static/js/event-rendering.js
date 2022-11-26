@@ -41,12 +41,12 @@ function updateSelectedDrill(id) {
     // updateFieldValue("id", selected_drill.id);
     updateFieldValue("drillTitle", selected_drill.title);
     updateFieldValue("date", selected_drill.date.substring(0,10));
-    updateFieldValue("start_time", selected_drill.start_time.substring(11,16));
-    updateFieldValue("end_time", selected_drill.end_time.substring(11,16));
+    updateFieldValue("start_time", selected_drill.startTime.substring(11,16));
+    updateFieldValue("end_time", selected_drill.endTime.substring(11,16));
 
     updateFieldValue("location", selected_drill.location);
-    updateFieldValue("admin_name", selected_drill.admin_name);
-    updateFieldValue("participants", selected_drill.participants);
+    updateFieldValue("admin_name", selected_drill.officerName);
+    // updateFieldValue("participants", selected_drill.participants);
     updateFieldValue("description", selected_drill.description);
     // updateFieldValue("created_timestamp", selected_drill.created_timestamp);
 
@@ -69,6 +69,7 @@ function updateSelectedDrill(id) {
 function updateFieldValue(elementID, newValue){
     console.log("Updating value for " + elementID + " to " + newValue);
     if(newValue !== null && newValue !== undefined){
+        console.log(document.getElementById(elementID).innerHTML);
         document.getElementById(elementID).innerHTML = newValue;
     }
     else{
@@ -116,14 +117,14 @@ function clicked_on2(){
  function preloadEvents() {
    const evt = {
      id: selected_drill.id,
-     starttime: selected_drill.start_time.substring(11,16),
-     endtime: selected_drill.end_time.substring(11,16),
+     starttime: selected_drill.startTime.substring(11,16),
+     endtime: selected_drill.endTime.substring(11,16),
      date: selected_drill.date.substring(0,10),
      name: selected_drill.drill_name
    };
 
-   id++;
-   eventContainer.innerHTML = "";
+   // id++;
+   // eventContainer.innerHTML = "";
    events = [];
    events.push(evt);
    processEvents();
@@ -217,6 +218,8 @@ function clicked_on2(){
    // 100 / ((8-colPos))
    oneEvent.style.gridColumnStart = getColumnPosition(evt.date);
    oneEvent.style.gridRowStart = getRowPosition(evt.starttime);
+
+   console.log(oneEvent.style.zIndex);
 
    /* add to event container */
    eventContainer.appendChild(oneEvent);

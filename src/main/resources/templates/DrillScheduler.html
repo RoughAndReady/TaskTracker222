@@ -13,7 +13,7 @@
     <script type="text/javascript" th:src="@{/js/event-rendering.js}"></script>
 </head>
 
-<body>
+<body onload="selectInitialDrill()">
     <!-- sidebar -->
     <aside class="sidebar">
         <ul class="sidebar-list">
@@ -102,11 +102,11 @@
                              class="slot" th:id="'drill-slot-' + ${drill.id}">
                             <script th:inline="javascript">
                                 drills = /*[[${drills}]]*/ [];
-                                selectInitialDrill();
                             </script>
                         </div>
                         <div class="slot" th:id="drill-slot-26">
-
+                        </div>
+                        <div class="slot" th:id="drill-slot-18">
                         </div>
                     </div>
                 </div>
@@ -666,25 +666,29 @@
                     <div>
                         <h2>Date: </h2>
                         <h3 id="date"></h3>
+                        <h3 id="start_time"></h3>
+                        <h3 id="end_time"></h3>
                     </div>
                     <div>
                         <h2>Location: </h2>
                         <h3 id="location"></h3>
                     </div>
                     <div>
-                        <h2>Admin: </h2>
+                        <h2>Report to: </h2>
                         <h3 id="admin_name"></h3>
                     </div>
+                    <!--
                     <div>
                         <h2>Participants: </h2>
                         <h3 id="group"></h3>
                     </div>
+                    -->
                 </div>
 
                 <hr>
                 
                 <div class="detailsDiv">
-                    <p id="note"></p>
+                    <p id="description"></p>
 
 
                     <!-- DEPRECATED: old dummy text
