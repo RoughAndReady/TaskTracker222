@@ -1,14 +1,10 @@
 package com.rmrfroot.tasktracker222.controllers;
 
-import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.Drill;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -112,7 +108,7 @@ public class DrillController {
         model.addAttribute("teams", Group.getTeams());
         model.addAttribute("locations", Group.getLocations());
 
-        return "CreateDrill";
+        return "DrillManagement";
     }
 
     @PostMapping(value = "/edit-drill", params = "submit")

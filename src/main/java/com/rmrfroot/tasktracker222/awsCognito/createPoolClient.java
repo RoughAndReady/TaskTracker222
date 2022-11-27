@@ -18,9 +18,7 @@ public class createPoolClient implements PoolClientInterface {
 
     final String ACCESS_KEY = System.getenv("ACCESS_KEY");
     final String SECRET_KEY = System.getenv("SECRET_KEY");
-
     final String USER_POOL_ID = System.getenv("USER_POOL_ID");
-
     final String REGION = System.getenv("AWS_REGION");
 
     private AWSCognitoIdentityProvider createCognitoClient() {
@@ -72,32 +70,6 @@ public class createPoolClient implements PoolClientInterface {
         cognitoClient.adminDeleteUser(request);
 
         cognitoClient.shutdown();
-        System.out.println("You have deleted the user [" + username + "]");
+        System.out.println("Deleted user [" + username + "]");
     }
-
-    @Override
-    public void updatePassword(String oldPassword, String newPassword, String accessToken,String username) {
-        AWSCognitoIdentityProvider cognitoClient = createCognitoClient();
-
-        /*
-            Sign user out of all devices
-         */
-        AdminUserGlobalSignOutRequest adminUserGlobalSignOutRequest=new AdminUserGlobalSignOutRequest();
-        adminUserGlobalSignOutRequest.withUsername(username).withUserPoolId(USER_POOL_ID);
-        cognitoClient.adminUserGlobalSignOut(adminUserGlobalSignOutRequest);
-
-        /*
-            Change password
-         */
-        ChangePasswordRequest changePasswordRequest=new ChangePasswordRequest()
-                .withAccessToken(accessToken)
-                .withPreviousPassword(oldPassword)
-                .withProposedPassword(newPassword);
-        cognitoClient.changePassword(changePasswordRequest);
-
-
-        cognitoClient.shutdown();
-        System.out.println("You have updated the user password, the name is " + username);
-    }
-
 }

@@ -92,6 +92,8 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             updatedUser.setWorkCenter(user.getWorkCenter());
             updatedUser.setFlight(user.getFlight());
             updatedUser.setTeams(user.getTeams());
+            updatedUser.setAdmin(user.isAdmin());
+
             usersDAO.save(updatedUser);
             return updatedUser;
         } catch (Exception e) {

@@ -3,7 +3,6 @@ package com.rmrfroot.tasktracker222.controllers;
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.dao.UsersDao;
 import com.rmrfroot.tasktracker222.entities.User;
-import com.rmrfroot.tasktracker222.services.DrillScheduleService;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -32,10 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 //@SpringBootTest
 class UserControllerTest {
-
-    //@InjectMocks
-    @MockBean
-    private DrillScheduleService drillScheduleService;
 
     //@InjectMocks
     @MockBean

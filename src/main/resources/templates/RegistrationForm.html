@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New User Registration</title>
+
+
+    <link rel="stylesheet" th:href="@{/registration/registration-form.css}">
+    <link rel="stylesheet" th:href="@{/registration/chosen-registration.css}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script th:src="@{/js/chosen.jquery.js}" type="text/javascript"></script>
+</head>
+
+<body class="registration-body">
+
+<div class="registration-div">
+
+    <h1 class="registration-header">New User Registration</h1>
+
+    <form class="registration-form" th:action="@{/register-new-user}" th:object="${newUser}" method="POST" autocomplete="off">
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="firstName">First Name</label>
+            <input class="registration-text-input" type="text" id="firstName" th:name="firstName" required>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="lastName">Last Name</label>
+            <input class="registration-text-input" type="text" id="lastName" th:name="lastName" required>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="militaryEmail">Mil Email</label>
+            <input class="registration-text-input" type="email" id="militaryEmail" th:name="militaryEmail" required>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="civilianEmail">Civ Email</label>
+            <input class="registration-text-input" type="email" id="civilianEmail" th:name="civilianEmail" required>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label" for="phoneNumber">Personal Phone</label>
+            <input class="registration-text-input" type="text" id="phoneNumber" th:name="phoneNumber">
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label" for="officeNumber">Office Phone</label>
+            <input class="registration-text-input" type="text" id="officeNumber" th:name="officeNumber">
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="rank">Rank</label>
+            <select id="rank" th:name="rank" required>
+                <option></option>
+                <option th:each="rank : ${ranks}" th:value="${rank}" th:text="${rank}"></option>
+            </select>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="flight">Flight</label>
+            <select id="flight" th:name="flight" required>
+                <option></option>
+                <option th:each="flight : ${flights}" th:value="${flight}" th:text="${flight}"></option>
+            </select>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="workcenter">Workcenter</label>
+            <select id="workcenter" th:name="workCenter" required>
+                <option></option>
+                <option th:each="workcenter : ${workcenters}" th:value="${workcenter}" th:text="${workcenter}"></option>
+            </select>
+        </div>
+
+        <div class="registration-input">
+            <label class="registration-field-label registration-field-required" for="teams">Teams</label>
+            <select id="teams" th:name="teams" multiple required>
+                <option></option>
+                <option th:each="team : ${teamList}" th:value="${team}" th:text="${team}"></option>
+            </select>
+        </div>
+
+        <input type="submit" value="Register" class="registration-submit">
+    </form>
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        console.log("Select init");
+
+        let select_field_css = {
+            "width": "100%",
+            "font-size": "1.5vh",
+            "border-radius": "2px",
+            "vertical-align": "center"
+        };
+
+        $('#rank').attr("data-placeholder", "Choose rank").chosen();
+        $('#rank_chosen').css(select_field_css);
+
+        $('#flight').attr("data-placeholder", "Choose flight").chosen();
+        $('#flight_chosen').css(select_field_css);
+
+        $('#workcenter').attr("data-placeholder", "Choose workcenter").chosen();
+        $('#workcenter_chosen').css(select_field_css);
+
+        $('#teams').attr("data-placeholder", "Choose teams").chosen();
+        $('#teams_chosen').css(select_field_css);
+    });
+</script>
+</body>
+</html>
