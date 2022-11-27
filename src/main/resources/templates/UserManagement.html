@@ -6,10 +6,9 @@
 
     <link rel="shortcut icon" href="#">
 
-    <link rel="stylesheet" th:href="@{/drill-creation.css}">
-    <link rel="stylesheet" th:href="@{/user-management.css}">
-    <link rel="stylesheet" th:href="@{/chosen-user/style.css}">
-    <link rel="stylesheet" th:href="@{/chosen-user/chosen-old.css}">
+    <link rel="stylesheet" th:href="@{/user-management/user-management.css}">
+    <link rel="stylesheet" th:href="@{/user-management/style.css}">
+    <link rel="stylesheet" th:href="@{/user-management/chosen-user.css}">
 
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
@@ -126,13 +125,6 @@
                                        th:field="*{lastName}">
                             </td>
                         </tr>
-                        <!--                        <tr>-->
-                        <!--                            <th class="user-management-entry">Account Email</th>-->
-                        <!--                            <td class="user-management-value-cell">-->
-                        <!--                                <input id="input-account_email" class="user-management-value" type="text"-->
-                        <!--                                       th:field="*{email}">-->
-                        <!--                            </td>-->
-                        <!--                        </tr>-->
                         <tr>
                             <th class="user-management-entry">Mil Email</th>
                             <td class="user-management-value-cell">
@@ -196,6 +188,15 @@
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <th class="user-management-entry">Admin</th>
+                            <td class="user-management-value-cell">
+                                <select id="input-admin" th:field="*{admin}">
+                                    <option value="true">True</option>
+                                    <option value="false">False</option>
+                                </select>
+                            </td>
+                        </tr>
 
                         <tr>
                             <input id="input-id" th:field="*{id}" style="visibility: hidden; position: absolute">
@@ -233,6 +234,9 @@
 
             $('#input-teams').attr("data-placeholder", "Teams").chosen();
             $('#input_teams_chosen').css(select_field_css);
+
+            $('#input-admin').attr("data-placeholder", "Admin").chosen();
+            $('#input_admin_chosen').css(select_field_css);
         });
     </script>
 

@@ -1,43 +1,29 @@
 package com.rmrfroot.tasktracker222.controllers;
 
-import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.Drill;
-import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
-import com.rmrfroot.tasktracker222.validations.ValidateDrill;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 
 @Controller
-public class DrillSchedulerController {
+public class DrillController {
     @Autowired
     private DrillDaoService drillDaoService;
 
     @Autowired
     private UsersDaoService usersDaoService;
 
-    @Autowired
-    private PoolClientInterface poolClientInterface;
-
-    public DrillSchedulerController(DrillDaoService drillDaoService) {
+    public DrillController(DrillDaoService drillDaoService) {
         super();
         this.drillDaoService = drillDaoService;
     }
@@ -66,20 +52,12 @@ public class DrillSchedulerController {
         List<Drill> drillsToAdd = new ArrayList<>();
         List<Drill> drillsAll = drillDaoService.findAll();
 
-        String username = getUsername();
-        for (Drill drill : drillsAll) {
-            /*
-                TODO: Add all drills that match user ID
-            */
-        }
-
-
         model.addAttribute("drills", drillsToAdd);
         return "DrillScheduler";
     }
 
     @GetMapping("/drill-schedule-manager")
-    public String createTestDrill(Model model, Principal principal) {
+    public String drillScheduleManager(Model model, Principal principal) {
 
         /*
             If user exists and is admin, proceed.
@@ -130,7 +108,7 @@ public class DrillSchedulerController {
         model.addAttribute("teams", Group.getTeams());
         model.addAttribute("locations", Group.getLocations());
 
-        return "CreateDrill";
+        return "DrillManagement";
     }
 
     @PostMapping(value = "/edit-drill", params = "submit")
@@ -160,19 +138,6 @@ public class DrillSchedulerController {
             return "redirect:/error";
         }
         return "redirect:/drill-schedule-manager";
-    }
-
-    /**
-     * @return the username of the active session user
-     */
-    private String getUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String currentUserName = authentication.getName();
-            return currentUserName;
-        }
-
-        return null;
     }
 
 }

@@ -17,15 +17,10 @@ function updateSelectedUser(id) {
 
     updateFieldValue("input-first_name", selected_user.firstName);
     updateFieldValue("input-last_name", selected_user.lastName);
-    // updateFieldValue("input-account_email", selected_user.email);
     updateFieldValue("input-mil_email", selected_user.militaryEmail);
     updateFieldValue("input-civ_email", selected_user.civilianEmail);
     updateFieldValue("input-personal_phone", selected_user.phoneNumber);
     updateFieldValue("input-office_phone", selected_user.officeNumber);
-    // updateFieldValue("input-rank", selected_user.rank);
-    // updateFieldValue("input-workcenter", selected_user.workCenter);
-    // updateFieldValue("input-flight", selected_user.flight);
-    // updateFieldValue("input-teams", selected_user.teams);
     updateFieldValue("input-id", selected_user.id);
 
 
@@ -33,6 +28,7 @@ function updateSelectedUser(id) {
     $('#input-flight').val(selected_user.flight).trigger('chosen:updated');
     $('#input-workcenter').val(selected_user.workCenter).trigger('chosen:updated');
     $('#input-teams').val(selected_user.teams).trigger('chosen:updated');
+    $('#input-admin').val(selected_user.admin ? "true" : "false").trigger('chosen:updated');
 
     if (users !== null) {
         for (let index in users) {

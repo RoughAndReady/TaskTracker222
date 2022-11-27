@@ -1,10 +1,8 @@
 package com.rmrfroot.tasktracker222.entities;
 
-import com.rmrfroot.tasktracker222.dao.DrillSchedulesImpl;
 import com.rmrfroot.tasktracker222.dao.UsersDAOImpl;
 import com.rmrfroot.tasktracker222.services.DrillDaoImpl;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
-import com.rmrfroot.tasktracker222.services.DrillScheduleServiceImpl;
 import com.rmrfroot.tasktracker222.services.UsersDaoServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +14,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class DrillControllerTests {
+    /*
 
     @InjectMocks
     private DrillScheduleServiceImpl drillScheduleServiceImpl;
@@ -44,5 +43,7 @@ public class DrillControllerTests {
 
     }
 
+
+     */
 
 }

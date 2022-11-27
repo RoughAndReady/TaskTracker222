@@ -93,7 +93,6 @@ public class User implements Comparable<User>{
             joinColumns =@JoinColumn(name="users_id"),
             inverseJoinColumns = @JoinColumn(name="drill_schedule_id")
     )
-    private List<DrillSchedules> drillSchedulesList;
 
     private static final String TEAM_LIST_FILENAME = "team.txt";
 
@@ -502,21 +501,6 @@ public class User implements Comparable<User>{
         this.userName = userName;
     }
 
-    /**
-     * Gets user's drill schedule
-     * @return user's drill schedule
-     */
-    public List<DrillSchedules> getDrillSchedulesList() {
-        return drillSchedulesList;
-    }
-
-    /**
-     * Sets user's drill schedule
-     * @param drillSchedulesList list containing all the drill schedule of a user
-     */
-    public void setDrillSchedulesList(List<DrillSchedules> drillSchedulesList) {
-        this.drillSchedulesList = drillSchedulesList;
-    }
 
     /**
      * gets user's email
@@ -534,31 +518,6 @@ public class User implements Comparable<User>{
         this.email = email;
     }
 
-    /**
-     * adds drill schedule to the drill-schedule list
-     */
-    public void addDrillSchedule(DrillSchedules drillSchedules){
-        if(drillSchedulesList ==null){
-            drillSchedulesList=new ArrayList<>();
-        }
-        drillSchedulesList.add(drillSchedules);
-    }
-
-    /**
-     * finds drill according to the id
-     * @param id int which tries to match with the users
-     * @return if id matched or not
-     */
-    public boolean findDrillScheduleById(int id){
-        boolean check=false;
-        for(DrillSchedules drillSchedules:getDrillSchedulesList()){
-            if(drillSchedules.getId()==id){
-                check=true;
-                break;
-            }
-        }
-        return check;
-    }
 
     public void setAdmin(boolean toSet){
         this.admin = toSet;

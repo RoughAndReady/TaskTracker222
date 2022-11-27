@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DrillSchedulesTest {
-
+/*
     private DrillSchedules drillSchedules = new DrillSchedules("event_title", "start_date", "deadline_date",
             "location", "admin_name", "officer_email@root.com","note", "created_timestamp");
 
@@ -188,4 +188,6 @@ class DrillSchedulesTest {
         assertEquals(userList,drillSchedules.getUsersList());
 
     }
+
+ */
 }
