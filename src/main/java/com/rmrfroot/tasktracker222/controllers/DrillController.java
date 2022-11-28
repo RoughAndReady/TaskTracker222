@@ -10,9 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Controller
@@ -28,12 +29,20 @@ public class DrillController {
         this.drillDaoService = drillDaoService;
     }
 
+    @GetMapping("/drill-schedule-recipient")
+    public String drillScheduleRecipientGeneric(){
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String weekOf = dateFormat.format(LocalDateTime.now());
+
+        return "redirect:/drill-schedule-recipient/week/" + weekOf;
+    }
+
     /**
      * For use by a singular recipient.
      * Only shows drills that are assigned to them.
      */
-    @GetMapping("/drill-schedule-recipient")
-    public String drillScheduleRecipient(Model model, Principal principal) {
+    @GetMapping("/drill-schedule-recipient/week/{week}")
+    public String drillScheduleRecipient(Model model, Principal principal, @PathVariable String week) {
 
         /*
             If user exists, add admin status to model.
@@ -49,10 +58,29 @@ public class DrillController {
             e.printStackTrace();
         }
 
-        List<Drill> drillsToAdd = new ArrayList<>();
-        List<Drill> drillsAll = drillDaoService.findAll();
+        List<Drill> allDrills = drillDaoService.findDrillsInWeekOfDateByID(week,
+                usersDaoService.findUserByUsername(principal.getName()).getId());
 
-        model.addAttribute("drills", drillsToAdd);
+        /*
+            Sort drills by date + start time
+            See compareTo() implementation in Drill to modify this behavior
+         */
+        try {
+            Collections.sort(allDrills);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        LinkedHashMap<DayOfWeek, Integer> concurrencyMap = drillDaoService.getDrillConcurrencyMap(allDrills);
+
+        model.addAttribute("daysOfWeek",
+                drillDaoService.getDaysOfWeekWithConcurrency(concurrencyMap));
+        model.addAttribute("concurrencyMatrix", concurrencyMap.values());
+
+        model.addAttribute("drills", allDrills);
+        model.addAttribute("users", usersDaoService.findAll());
+        model.addAttribute("datesOfWeek", drillDaoService.findDatesForScheduleByDate(week));
+        model.addAttribute("selectedDate", week);
         return "DrillScheduler";
     }
 
