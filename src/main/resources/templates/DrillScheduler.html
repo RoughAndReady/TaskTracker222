@@ -4,33 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drill Scheduler</title>
+    <link rel="shortcut icon" href="#">
 
     <!-- material icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <!-- stylesheet -->
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <script>
-        function clicked_on1(){
-            document.getElementById('title').innerHTML = 'Event 1';
-            document.getElementById('time').innerHTML = 'Mon 9:00am - 11:00am';
-            document.getElementById('place').innerHTML = 'Place 1';
-            document.getElementById('admin').innerHTML = 'Person 1';
-            document.getElementById('group').innerHTML = 'Group 1';
-        }
-    </script>
-    <script>
-        function clicked_on2(){
-            document.getElementById('title').innerHTML = 'Event 2';
-            document.getElementById('time').innerHTML = 'Thu 12:00pm - 3:00pm';
-            document.getElementById('place').innerHTML = 'Place 2';
-            document.getElementById('admin').innerHTML = 'Person 2';
-            document.getElementById('group').innerHTML = 'Group 2';
-        }
-    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/drill-schedule-generator.js}"></script>
+    <script type="text/javascript" th:src="@{/js/drill-schedule-render.js}"></script>
+    <script type="text/javascript" th:src="@{/js/drill-schedule-selection.js}"></script>
 </head>
 
-<body>
+<body onload="selectInitialDrill();">
     <!-- sidebar -->
     <aside class="sidebar">
         <ul class="sidebar-list">
@@ -72,552 +60,59 @@
         <!-- calendar -->
         <div class="left">
             <div class="top-left">
-                <a href="#" class="week-nav-button">
+                <a id="last-week" class="week-nav-button">
                     <span class="material-symbols-outlined">chevron_left</span>
+                    <script th:inline="javascript">
+                        let selectedDay = new Date(/*[[${selectedDate}]]*/);
+                        let requestedDateLast = findLastWeek(selectedDay);
+
+                        $('#last-week').click(function(){
+                            console.log("last week");
+                            window.location.replace("/drill-schedule-recipient/week/" + requestedDateLast);
+                        })
+                    </script>
                 </a>
                 <div class="week-display">
                     <h3 class="week-text">Week of:</h3>
                     <div class="date">
-                        <input type="date">
+                        <input id="week-selector" type="date">
+                        <script th:inline="javascript">
+                            $('#week-selector').change(function() {
+                                window.location.replace("/drill-schedule-recipient/week/" + this.value);
+                            }).val(/*[[${selectedDate}]]*/);
+                        </script>
                     </div>
                 </div>
-                <a href="#" class="week-nav-button">
+                <a id="next-week" class="week-nav-button">
                     <span class="material-symbols-outlined">chevron_right</span>
+                    <script>
+                        let requestedDateNext = findNextWeek(selectedDay);
+
+                        $('#next-week').click(function(){
+                            window.location.replace("/drill-schedule-recipient/week/" + requestedDateNext);
+                        })
+                    </script>
                 </a>
             </div>
-            <div class="bottom-left">
-                <!-- calendar container -->
-                <div class="calendarContainer">
-                    <!-- time column -->
-                    <div class="timeCol">
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">6am</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">7am</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">8am</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">9am</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">10am</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">11am</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">12pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">1pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">2pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">3pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">4pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">5pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                        <div class="timeDiv">
-                            <p class="timeText">6pm</p>
-                        </div>
-                        <div class="timeSpace"></div>
-                    </div>
-                    <!-- Sunday column -->
-                    <div class="dayCol" id="Sun">
-                        <div class="q1" id="Sun600a"></div>
-                        <div class="q2" id="Sun615a"></div>
-                        <div class="q3" id="Sun630a"></div>
-                        <div class="q4" id="Sun645a"></div>
-                        
-                        <div class="q1" id="Sun700a"></div>
-                        <div class="q2" id="Sun715a"></div>
-                        <div class="q3" id="Sun730a"></div>
-                        <div class="q4" id="Sun745a"></div>
-                        
-                        <div class="q1" id="Sun800a"></div>
-                        <div class="q2" id="Sun815a"></div>
-                        <div class="q3" id="Sun830a"></div>
-                        <div class="q4" id="Sun845a"></div>
-                        
-                        <div class="q1" id="Sun900a"></div>
-                        <div class="q2" id="Sun915a"></div>
-                        <div class="q3" id="Sun930a"></div>
-                        <div class="q4" id="Sun945a"></div>
-                        
-                        <div class="q1" id="Sun1000a"></div>
-                        <div class="q2" id="Sun1015a"></div>
-                        <div class="q3" id="Sun1030a"></div>
-                        <div class="q4" id="Sun1045a"></div>
-                        
-                        <div class="q1" id="Sun1100a"></div>
-                        <div class="q2" id="Sun1115a"></div>
-                        <div class="q3" id="Sun1130a"></div>
-                        <div class="q4" id="Sun1145a"></div>
-                        
-                        <div class="q1" id="Sun1200p"></div>
-                        <div class="q2" id="Sun1215p"></div>
-                        <div class="q3" id="Sun1230p"></div>
-                        <div class="q4" id="Sun1245p"></div>
-                        
-                        <div class="q1" id="Sun100p"></div>
-                        <div class="q2" id="Sun115p"></div>
-                        <div class="q3" id="Sun130p"></div>
-                        <div class="q4" id="Sun145p"></div>
-                        
-                        <div class="q1" id="Sun200p"></div>
-                        <div class="q2" id="Sun215p"></div>
-                        <div class="q3" id="Sun230p"></div>
-                        <div class="q4" id="Sun245p"></div>
-                        
-                        <div class="q1" id="Sun600a"></div>
-                        <div class="q2" id="Sun615a"></div>
-                        <div class="q3" id="Sun630a"></div>
-                        <div class="q4" id="Sun645a"></div>
-                        
-                        <div class="q1" id="Sun600a"></div>
-                        <div class="q2" id="Sun615a"></div>
-                        <div class="q3" id="Sun630a"></div>
-                        <div class="q4" id="Sun645a"></div>
-                        
-                        <div class="q1" id="Sun600a"></div>
-                        <div class="q2" id="Sun615a"></div>
-                        <div class="q3" id="Sun630a"></div>
-                        <div class="q4" id="Sun645a"></div>
-                    </div>
-                    <!-- Monday column -->
-                    <div class="dayCol" id="Mon">
-                        <div class="q1" id="Mon600a"></div>
-                        <div class="q2" id="Mon615a"></div>
-                        <div class="q3" id="Mon630a"></div>
-                        <div class="q4" id="Mon645a"></div>
-                        
-                        <div class="q1" id="Mon700a"></div>
-                        <div class="q2" id="Mon715a"></div>
-                        <div class="q3" id="Mon730a"></div>
-                        <div class="q4" id="Mon745a"></div>
-                        
-                        <div class="q1" id="Mon800a"></div>
-                        <div class="q2" id="Mon815a"></div>
-                        <div class="q3" id="Mon830a"></div>
-                        <div class="q4" id="Mon845a"></div>
-                        
-                        <div class="q1" id="Mon900a">
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        <div class="q2" id="Mon915a">
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        <div class="q3" id="Mon930a">
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        <div class="q4" id="Mon945a">
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        
-                        <div class="q1" id="Mon1000a">                            
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        <div class="q2" id="Mon1015a">                            
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        <div class="q3" id="Mon1030a">
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        <div class="q4" id="Mon1045a">
-                            <div class="event1" onclick="clicked_on1()" title="Event 1"></div>
-                        </div>
-                        
-                        <div class="q1" id="Mon1100a"></div>
-                        <div class="q2" id="Mon1115a"></div>
-                        <div class="q3" id="Mon1130a"></div>
-                        <div class="q4" id="Mon1145a"></div>
-                        
-                        <div class="q1" id="Mon1200p"></div>
-                        <div class="q2" id="Mon1215p"></div>
-                        <div class="q3" id="Mon1230p"></div>
-                        <div class="q4" id="Mon1245p"></div>
-                        
-                        <div class="q1" id="Mon100p"></div>
-                        <div class="q2" id="Mon115p"></div>
-                        <div class="q3" id="Mon130p"></div>
-                        <div class="q4" id="Mon145p"></div>
-                        
-                        <div class="q1" id="Mon200p"></div>
-                        <div class="q2" id="Mon215p"></div>
-                        <div class="q3" id="Mon230p"></div>
-                        <div class="q4" id="Mon245p"></div>
-                        
-                        <div class="q1" id="Mon600a"></div>
-                        <div class="q2" id="Mon615a"></div>
-                        <div class="q3" id="Mon630a"></div>
-                        <div class="q4" id="Mon645a"></div>
-                        
-                        <div class="q1" id="Mon600a"></div>
-                        <div class="q2" id="Mon615a"></div>
-                        <div class="q3" id="Mon630a"></div>
-                        <div class="q4" id="Mon645a"></div>
-                        
-                        <div class="q1" id="Mon600a"></div>
-                        <div class="q2" id="Mon615a"></div>
-                        <div class="q3" id="Mon630a"></div>
-                        <div class="q4" id="Mon645a"></div>
-                    </div>
-                    <!-- Tuesday column -->
-                    <div class="dayCol" id="Tue">
-                        <div class="q1" id="Tue600a"></div>
-                        <div class="q2" id="Tue615a"></div>
-                        <div class="q3" id="Tue630a"></div>
-                        <div class="q4" id="Tue645a"></div>
-                        
-                        <div class="q1" id="Tue700a"></div>
-                        <div class="q2" id="Tue715a"></div>
-                        <div class="q3" id="Tue730a"></div>
-                        <div class="q4" id="Tue745a"></div>
-                        
-                        <div class="q1" id="Tue800a"></div>
-                        <div class="q2" id="Tue815a"></div>
-                        <div class="q3" id="Tue830a"></div>
-                        <div class="q4" id="Tue845a"></div>
-                        
-                        <div class="q1" id="Tue900a"></div>
-                        <div class="q2" id="Tue915a"></div>
-                        <div class="q3" id="Tue930a"></div>
-                        <div class="q4" id="Tue945a"></div>
-                        
-                        <div class="q1" id="Tue1000a"></div>
-                        <div class="q2" id="Tue1015a"></div>
-                        <div class="q3" id="Tue1030a"></div>
-                        <div class="q4" id="Tue1045a"></div>
-                        
-                        <div class="q1" id="Tue1100a"></div>
-                        <div class="q2" id="Tue1115a"></div>
-                        <div class="q3" id="Tue1130a"></div>
-                        <div class="q4" id="Tue1145a"></div>
-                        
-                        <div class="q1" id="Tue1200p"></div>
-                        <div class="q2" id="Tue1215p"></div>
-                        <div class="q3" id="Tue1230p"></div>
-                        <div class="q4" id="Tue1245p"></div>
-                        
-                        <div class="q1" id="Tue100p"></div>
-                        <div class="q2" id="Tue115p"></div>
-                        <div class="q3" id="Tue130p"></div>
-                        <div class="q4" id="Tue145p"></div>
-                        
-                        <div class="q1" id="Tue200p"></div>
-                        <div class="q2" id="Tue215p"></div>
-                        <div class="q3" id="Tue230p"></div>
-                        <div class="q4" id="Tue245p"></div>
-                        
-                        <div class="q1" id="Tue600a"></div>
-                        <div class="q2" id="Tue615a"></div>
-                        <div class="q3" id="Tue630a"></div>
-                        <div class="q4" id="Tue645a"></div>
-                        
-                        <div class="q1" id="Tue600a"></div>
-                        <div class="q2" id="Tue615a"></div>
-                        <div class="q3" id="Tue630a"></div>
-                        <div class="q4" id="Tue645a"></div>
-                        
-                        <div class="q1" id="Tue600a"></div>
-                        <div class="q2" id="Tue615a"></div>
-                        <div class="q3" id="Tue630a"></div>
-                        <div class="q4" id="Tue645a"></div>
-                    </div>
-                    <!-- Wednesday column -->
-                    <div class="dayCol" id="Wed">
-                        <div class="q1" id="Wed600a"></div>
-                        <div class="q2" id="Wed615a"></div>
-                        <div class="q3" id="Wed630a"></div>
-                        <div class="q4" id="Wed645a"></div>
-                        
-                        <div class="q1" id="Wed700a"></div>
-                        <div class="q2" id="Wed715a"></div>
-                        <div class="q3" id="Wed730a"></div>
-                        <div class="q4" id="Wed745a"></div>
-                        
-                        <div class="q1" id="Wed800a"></div>
-                        <div class="q2" id="Wed815a"></div>
-                        <div class="q3" id="Wed830a"></div>
-                        <div class="q4" id="Wed845a"></div>
-                        
-                        <div class="q1" id="Wed900a"></div>
-                        <div class="q2" id="Wed915a"></div>
-                        <div class="q3" id="Wed930a"></div>
-                        <div class="q4" id="Wed945a"></div>
-                        
-                        <div class="q1" id="Wed1000a"></div>
-                        <div class="q2" id="Wed1015a"></div>
-                        <div class="q3" id="Wed1030a"></div>
-                        <div class="q4" id="Wed1045a"></div>
-                        
-                        <div class="q1" id="Wed1100a"></div>
-                        <div class="q2" id="Wed1115a"></div>
-                        <div class="q3" id="Wed1130a"></div>
-                        <div class="q4" id="Wed1145a"></div>
-                        
-                        <div class="q1" id="Wed1200p"></div>
-                        <div class="q2" id="Wed1215p"></div>
-                        <div class="q3" id="Wed1230p"></div>
-                        <div class="q4" id="Wed1245p"></div>
-                        
-                        <div class="q1" id="Wed100p"></div>
-                        <div class="q2" id="Wed115p"></div>
-                        <div class="q3" id="Wed130p"></div>
-                        <div class="q4" id="Wed145p"></div>
-                        
-                        <div class="q1" id="Wed200p"></div>
-                        <div class="q2" id="Wed215p"></div>
-                        <div class="q3" id="Wed230p"></div>
-                        <div class="q4" id="Wed245p"></div>
-                        
-                        <div class="q1" id="Wed600a"></div>
-                        <div class="q2" id="Wed615a"></div>
-                        <div class="q3" id="Wed630a"></div>
-                        <div class="q4" id="Wed645a"></div>
-                        
-                        <div class="q1" id="Wed600a"></div>
-                        <div class="q2" id="Wed615a"></div>
-                        <div class="q3" id="Wed630a"></div>
-                        <div class="q4" id="Wed645a"></div>
-                        
-                        <div class="q1" id="Wed600a"></div>
-                        <div class="q2" id="Wed615a"></div>
-                        <div class="q3" id="Wed630a"></div>
-                        <div class="q4" id="Wed645a"></div>
-                    </div>
-                    <!-- Thursday column -->
-                    <div class="dayCol" id="Thu">
-                        <div class="q1" id="Thu600a"></div>
-                        <div class="q2" id="Thu615a"></div>
-                        <div class="q3" id="Thu630a"></div>
-                        <div class="q4" id="Thu645a"></div>
-                        
-                        <div class="q1" id="Thu700a"></div>
-                        <div class="q2" id="Thu715a"></div>
-                        <div class="q3" id="Thu730a"></div>
-                        <div class="q4" id="Thu745a"></div>
-                        
-                        <div class="q1" id="Thu800a"></div>
-                        <div class="q2" id="Thu815a"></div>
-                        <div class="q3" id="Thu830a"></div>
-                        <div class="q4" id="Thu845a"></div>
-                        
-                        <div class="q1" id="Thu900a"></div>
-                        <div class="q2" id="Thu915a"></div>
-                        <div class="q3" id="Thu930a"></div>
-                        <div class="q4" id="Thu945a"></div>
-                        
-                        <div class="q1" id="Thu1000a"></div>
-                        <div class="q2" id="Thu1015a"></div>
-                        <div class="q3" id="Thu1030a"></div>
-                        <div class="q4" id="Thu1045a"></div>
-                        
-                        <div class="q1" id="Thu1100a"></div>
-                        <div class="q2" id="Thu1115a"></div>
-                        <div class="q3" id="Thu1130a"></div>
-                        <div class="q4" id="Thu1145a"></div>
-                        
-                        <div class="q1" id="Thu1200p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q2" id="Thu1215p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q3" id="Thu1230p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q4" id="Thu1245p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        
-                        <div class="q1" id="Thu100p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q2" id="Thu115p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q3" id="Thu130p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q4" id="Thu145p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        
-                        <div class="q1" id="Thu200p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q2" id="Thu215p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q3" id="Thu230p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        <div class="q4" id="Thu245p">                            
-                            <div class="event2" onclick="clicked_on2()" title="Event 2"></div>
-                        </div>
-                        
-                        <div class="q1" id="Thu600a"></div>
-                        <div class="q2" id="Thu615a"></div>
-                        <div class="q3" id="Thu630a"></div>
-                        <div class="q4" id="Thu645a"></div>
-                        
-                        <div class="q1" id="Thu600a"></div>
-                        <div class="q2" id="Thu615a"></div>
-                        <div class="q3" id="Thu630a"></div>
-                        <div class="q4" id="Thu645a"></div>
-                        
-                        <div class="q1" id="Thu600a"></div>
-                        <div class="q2" id="Thu615a"></div>
-                        <div class="q3" id="Thu630a"></div>
-                        <div class="q4" id="Thu645a"></div>
-                    </div>
-                    <!-- Friday column -->
-                    <div class="dayCol" id="Fri">
-                        <div class="q1" id="Fri600a"></div>
-                        <div class="q2" id="Fri615a"></div>
-                        <div class="q3" id="Fri630a"></div>
-                        <div class="q4" id="Fri645a"></div>
-                        
-                        <div class="q1" id="Fri700a"></div>
-                        <div class="q2" id="Fri715a"></div>
-                        <div class="q3" id="Fri730a"></div>
-                        <div class="q4" id="Fri745a"></div>
-                        
-                        <div class="q1" id="Fri800a"></div>
-                        <div class="q2" id="Fri815a"></div>
-                        <div class="q3" id="Fri830a"></div>
-                        <div class="q4" id="Fri845a"></div>
-                        
-                        <div class="q1" id="Fri900a"></div>
-                        <div class="q2" id="Fri915a"></div>
-                        <div class="q3" id="Fri930a"></div>
-                        <div class="q4" id="Fri945a"></div>
-                        
-                        <div class="q1" id="Fri1000a"></div>
-                        <div class="q2" id="Fri1015a"></div>
-                        <div class="q3" id="Fri1030a"></div>
-                        <div class="q4" id="Fri1045a"></div>
-                        
-                        <div class="q1" id="Fri1100a"></div>
-                        <div class="q2" id="Fri1115a"></div>
-                        <div class="q3" id="Fri1130a"></div>
-                        <div class="q4" id="Fri1145a"></div>
-                        
-                        <div class="q1" id="Fri1200p"></div>
-                        <div class="q2" id="Fri1215p"></div>
-                        <div class="q3" id="Fri1230p"></div>
-                        <div class="q4" id="Fri1245p"></div>
-                        
-                        <div class="q1" id="Fri100p"></div>
-                        <div class="q2" id="Fri115p"></div>
-                        <div class="q3" id="Fri130p"></div>
-                        <div class="q4" id="Fri145p"></div>
-                        
-                        <div class="q1" id="Fri200p"></div>
-                        <div class="q2" id="Fri215p"></div>
-                        <div class="q3" id="Fri230p"></div>
-                        <div class="q4" id="Fri245p"></div>
-                        
-                        <div class="q1" id="Fri600a"></div>
-                        <div class="q2" id="Fri615a"></div>
-                        <div class="q3" id="Fri630a"></div>
-                        <div class="q4" id="Fri645a"></div>
-                        
-                        <div class="q1" id="Fri600a"></div>
-                        <div class="q2" id="Fri615a"></div>
-                        <div class="q3" id="Fri630a"></div>
-                        <div class="q4" id="Fri645a"></div>
-                        
-                        <div class="q1" id="Fri600a"></div>
-                        <div class="q2" id="Fri615a"></div>
-                        <div class="q3" id="Fri630a"></div>
-                        <div class="q4" id="Fri645a"></div>
-                    </div>
-                    <!-- Saturday column -->
-                    <div class="dayCol" id="Sat">
-                        <div class="q1" id="Sat600a"></div>
-                        <div class="q2" id="Sat615a"></div>
-                        <div class="q3" id="Sat630a"></div>
-                        <div class="q4" id="Sat645a"></div>
-                        
-                        <div class="q1" id="Sat700a"></div>
-                        <div class="q2" id="Sat715a"></div>
-                        <div class="q3" id="Sat730a"></div>
-                        <div class="q4" id="Sat745a"></div>
-                        
-                        <div class="q1" id="Sat800a"></div>
-                        <div class="q2" id="Sat815a"></div>
-                        <div class="q3" id="Sat830a"></div>
-                        <div class="q4" id="Sat845a"></div>
-                        
-                        <div class="q1" id="Sat900a"></div>
-                        <div class="q2" id="Sat915a"></div>
-                        <div class="q3" id="Sat930a"></div>
-                        <div class="q4" id="Sat945a"></div>
-                        
-                        <div class="q1" id="Sat1000a"></div>
-                        <div class="q2" id="Sat1015a"></div>
-                        <div class="q3" id="Sat1030a"></div>
-                        <div class="q4" id="Sat1045a"></div>
-                        
-                        <div class="q1" id="Sat1100a"></div>
-                        <div class="q2" id="Sat1115a"></div>
-                        <div class="q3" id="Sat1130a"></div>
-                        <div class="q4" id="Sat1145a"></div>
-                        
-                        <div class="q1" id="Sat1200p"></div>
-                        <div class="q2" id="Sat1215p"></div>
-                        <div class="q3" id="Sat1230p"></div>
-                        <div class="q4" id="Sat1245p"></div>
-                        
-                        <div class="q1" id="Sat100p"></div>
-                        <div class="q2" id="Sat115p"></div>
-                        <div class="q3" id="Sat130p"></div>
-                        <div class="q4" id="Sat145p"></div>
-                        
-                        <div class="q1" id="Sat200p"></div>
-                        <div class="q2" id="Sat215p"></div>
-                        <div class="q3" id="Sat230p"></div>
-                        <div class="q4" id="Sat245p"></div>
-                        
-                        <div class="q1" id="Sat600a"></div>
-                        <div class="q2" id="Sat615a"></div>
-                        <div class="q3" id="Sat630a"></div>
-                        <div class="q4" id="Sat645a"></div>
-                        
-                        <div class="q1" id="Sat600a"></div>
-                        <div class="q2" id="Sat615a"></div>
-                        <div class="q3" id="Sat630a"></div>
-                        <div class="q4" id="Sat645a"></div>
-                        
-                        <div class="q1" id="Sat600a"></div>
-                        <div class="q2" id="Sat615a"></div>
-                        <div class="q3" id="Sat630a"></div>
-                        <div class="q4" id="Sat645a"></div>
-                    </div>
+            <div id="calendar-container" class="bottom-left">
+                <script th:inline="javascript">
+                    users = /*[[${users}]]*/ [];
+                    daysOfWeek =  /*[[${daysOfWeek}]]*/ [];
+                    datesOfWeek = /*[[${datesOfWeek}]]*/ [];
+                    concurrencyMatrix = /*[[${concurrencyMatrix}]]*/ [];
+
+                    drills = /*[[${drills}]]*/ [];
+                    if(drills.length > 0) {
+                        selected_drill = drills[0];
+                    }
+
+                    generateDayAndDateHeaders();
+                </script>
+                <div id="calendar-view" class="calendarContainer">
+                    <script>
+                        generateTimeColumn();
+                        generateDayColumns();
+                    </script>
                 </div>
             </div>
         </div>
@@ -629,93 +124,40 @@
             </div>
             <div class="bottom-right">
                 <div class="titleDiv">
-                    <h1 id="title">Event 1</h1>
+                    <h1 id="drill-title">No Events This Week!</h1>
                 </div>
                 
-                <div class="summaryDiv">
+                <div class="summaryDiv" th:if="${drills.size() != 0}">
                     <div>
-                        <h2>Time: </h2>
-                        <h3 id="time">Mon 9:00am - 11:00am</h3>
+                        <h2>Date:</h2>
+                        <h2 id="drill-date"></h2>
+                    </div>
+
+                    <div>
+                        <h2>Time:</h2>
+                        <h2 id="drill-time"></h2>
                     </div>
                     <div>
                         <h2>Location: </h2>
-                        <h3 id="place">Place 1</h3>
+                        <h2 id="drill-location"></h2>
                     </div>
                     <div>
-                        <h2>Admin: </h2>
-                        <h3 id="admin">Person 1</h3>
+                        <h2>Report To: </h2>
+                        <h2 id="drill-report-to"></h2>
                     </div>
                     <div>
                         <h2>Participants: </h2>
-                        <h3 id="group">Group 1</h3>
+                        <h2 id="drill-participants"></h2>
                     </div>
                 </div>
 
-                <hr>
+                <hr th:if="${drills.size() != 0}">
                 
-                <div class="detailsDiv">
-                    <p id="detailsMain">Lorem ipsum; this is example detail text for an event.
-                        There will likely be more sentences or details here,
-                        but this is just an example for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Some sentences may repeat,
-                        for the sake of showcasing how information may be displayed.
-                        Some sentences may repeat, for the sake of showcasing
-                        how information may be displayed.
-
-                        Lorem ipsum; this is example detail text for an event.
-                        There will likely be more sentences or details here,
-                        but this is just an example for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Some sentences may repeat,
-                        for the sake of showcasing how information may be displayed.
-                        Some sentences may repeat, for the sake of showcasing
-                        how information may be displayed.
-                    </p>
-                    <p id="detailsSub">
-                        In the event that there needs to be more info, some separation makes
-                        the text look a little nicer.  
-                        There will likely be more sentences or details here,
-                        but this is just an example for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Some sentences may repeat,
-                        for the sake of showcasing how information may be displayed.
-                        Some sentences may repeat, for the sake of showcasing
-                        how information may be displayed.
-
-                        This paragraph will be a bit longer than the first,
-                        solely for demonstration purposes.  Its length may be a bit longer,
-                        to simulate additional information being included in the second half
-                        of the event details.  This paragraph will be a bit longer than the first,
-                        solely for demonstration purposes.  Its length may be a bit longer,
-                        to simulate additional information being included in the second half
-                        of the event details.
-
-                        In the event that there needs to be more info, some separation makes
-                        the text look a little nicer.  
-                        There will likely be more sentences or details here,
-                        but this is just an example for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Again,
-                        this is for the sake of demonstration.  Some sentences may repeat,
-                        for the sake of showcasing how information may be displayed.
-                        Some sentences may repeat, for the sake of showcasing
-                        how information may be displayed.
-                    </p>
+                <div class="detailsDiv" th:if="${drills.size() != 0}">
+                    <p id="drill-description"></p>
                 </div>
             </div>
         </div>
-
-<!--        This is a preliminary setup of Thymeleaf data access for drill schedule - compatible with both user and manager-->
-<!--        These flags will be changed, moved, and modified as necessary to conform to data display scheme-->
-<!--        <div th:each="drill: ${drills}">-->
-<!--            <span th:text="${drill.title}"></span>-->
-<!--            <span th:text="${drill.startDate}"></span>-->
-<!--            <span th:text="${drill.deadlineDate}"></span>-->
-<!--            <span th:text="${drill.location}"></span>-->
-<!--            <span th:text="${drill.officerName}"></span>-->
-<!--            <span th:text="${drill.officerEmail}"></span>-->
-<!--            <span th:text="${drill.note}"></span>-->
-<!--        </div>-->
     </main>
 </body>
 </html>
