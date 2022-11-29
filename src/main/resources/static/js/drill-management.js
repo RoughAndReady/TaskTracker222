@@ -169,3 +169,20 @@ function clearAllFields(){
     $('#drill-report-to').val(-1).trigger('chosen:updated');
     $('#drill-participants').val(null).trigger('chosen:updated');
 }
+
+function findNextWeek(selectedDate){
+    let nextWeek = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), (selectedDate.getDate() + 8));
+    return formatDateForSelector(nextWeek);
+}
+
+function findLastWeek(selectedDate){
+    let lastWeek = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), (selectedDate.getDate() - 6));
+    return formatDateForSelector(lastWeek);
+}
+
+function formatDateForSelector(dateToFormat){
+    let out = dateToFormat.getFullYear() + '-' +
+        (dateToFormat.getMonth() + 1 < 10 ? '0' : '') + (dateToFormat.getMonth() + 1) + '-' +
+        (dateToFormat.getDate() < 10 ? '0' : '') + dateToFormat.getDate();
+    return out;
+}
