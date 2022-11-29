@@ -71,13 +71,10 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             User updatedUser;
             if (result.isPresent()) {
                 updatedUser = result.get();
-                //usersDAO.deleteById(id);
             } else {
-                //day not found
                 throw new RuntimeException("Did not find user id - " + id);
             }
 
-//            updatedUser.setId(id);
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
 
@@ -86,6 +83,7 @@ public class UsersDaoServiceImpl implements UsersDaoService {
 
             if (!user.getCivilianEmail().isBlank())
                 updatedUser.setCivilianEmail(user.getCivilianEmail());
+
             updatedUser.setPhoneNumber(user.getPhoneNumber());
             updatedUser.setOfficeNumber(user.getOfficeNumber());
             updatedUser.setRank(user.getRank());
@@ -93,6 +91,13 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             updatedUser.setFlight(user.getFlight());
             updatedUser.setTeams(user.getTeams());
             updatedUser.setAdmin(user.isAdmin());
+
+            // If updating this user would result in no admins remaining, force user to remain an admin
+            if(!isAdminPresent()){
+                System.out.println("Cannot remove admin attribute from user [" + user.getUserName() + "] - there " +
+                        "must be at least one user with admin attribute in database.");
+                updatedUser.setAdmin(true);
+            }
 
             usersDAO.save(updatedUser);
             return updatedUser;
@@ -106,10 +111,6 @@ public class UsersDaoServiceImpl implements UsersDaoService {
     @Override
     @Transactional
     public void save(User user) {
-        //If database is empty, first user added will be an admin
-        if(usersDAO.findAll().isEmpty())
-            user.setAdmin(true);
-
         usersDAO.save(user);
     }
 
@@ -191,65 +192,22 @@ public class UsersDaoServiceImpl implements UsersDaoService {
         User user = new User(userName, firstName, lastName, militaryEmail, civilianEmail, email,
                 phoneNumber, officeNumber, rank, workCenter,
                 flight, teams);
+
+        if(!isAdminPresent()){
+            System.out.println("No users have the admin attribute yet. User [" + userName + "] has been given " +
+                            "admin attribute to assist with setup.");
+            user.setAdmin(true);
+        }
+
         usersDAO.save(user);
     }
 
     @Override
-    public List<User> findUsersByWorkCenter(String workCenter) {
-        Session cSession = entityManager.unwrap(Session.class);
-        Query<User> query = cSession.createQuery("from User where workCenter = :workCenter", User.class);
-        query.setParameter("workCenter", workCenter);
-
-        List<User> users;
-        try {
-            users = query.getResultList();
-        } catch (Exception e) {
-            users = null;
+    public boolean isAdminPresent(){
+        for (User user : findAll()) {
+            if(user.isAdmin())
+                return true;
         }
-        return users;
+        return false;
     }
-
-    @Override
-    public List<User> findUsersByFlight(String flight) {
-        Session cSession = entityManager.unwrap(Session.class);
-        Query<User> query = cSession.createQuery("from User where flight = :flight", User.class);
-        query.setParameter("flight", flight);
-
-        List<User> users;
-        try {
-            users = query.getResultList();
-        } catch (Exception e) {
-            users = null;
-        }
-        return users;
-    }
-
-    @Override
-    public List<User> findUsersByTeam(String team) {
-        Session cSession = entityManager.unwrap(Session.class);
-
-        Query<User> query = cSession.createQuery("from User where cast(teams as string) like concat('%',:team,'%') ", User.class);
-        query.setParameter("team", team);
-
-        List<User> users;
-        try {
-            users = query.getResultList();
-        } catch (Exception e) {
-            users = null;
-        }
-        return users;
-    }
-
-//    @Override
-//    public List<User> findUsersByWorkCenter(String workCenter) {
-//        return customUsersDAO.findUsersByWorkCenter(workCenter);
-//    }
-//
-//    @Override
-//    public List<User> findUsersByFlight(String flight) {
-//        return customUsersDAO.findUsersByFlight(flight);
-//    }
-//
-//    @Override
-//    public List<User> findUsersByTeam(String team) { return customUsersDAO.findUsersByTeam(team); }
 }
