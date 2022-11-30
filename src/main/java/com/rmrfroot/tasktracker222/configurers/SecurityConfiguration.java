@@ -13,10 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
-                .and()
+                .disable()
                 .authorizeRequests() //users request need to be authorized, such as access token or refresh token
                 .anyRequest() //all requests that sent by users
                 .authenticated() //need to be authenticated, such as signIN
@@ -27,6 +28,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/",true) // default page after a user is successful signIN
                 .and()
                 .logout()
+                .logoutSuccessUrl("https://tasktracker222.auth.us-west-1.amazoncognito.com/logout?client_id=30pr4eskaka76d1r7ocbpvvn7k" +
+                        "&logout_uri=http://localhost:8080/")
         ;
     }
 }
