@@ -37,6 +37,14 @@ public class DrillController {
         return "redirect:/drill-schedule-recipient/week/" + weekOf;
     }
 
+    @GetMapping("/drill-schedule-manager")
+    public String drillScheduleManagerGeneric(){
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String weekOf = dateFormat.format(LocalDateTime.now());
+
+        return "redirect:/drill-schedule-manager/week/" + weekOf;
+    }
+
     /**
      * For use by a singular recipient.
      * Only shows drills that are assigned to them.
@@ -84,8 +92,8 @@ public class DrillController {
         return "DrillScheduler";
     }
 
-    @GetMapping("/drill-schedule-manager")
-    public String drillScheduleManager(Model model, Principal principal) {
+    @GetMapping("/drill-schedule-manager/week/{week}")
+    public String drillScheduleManager(Model model, Principal principal, @PathVariable String week) {
 
         /*
             If user exists and is admin, proceed.
@@ -104,7 +112,8 @@ public class DrillController {
         }
 
         Drill drillEditRequest = new Drill();
-        List<Drill> allDrills = drillDaoService.findAll();
+        List<Drill> allDrills = drillDaoService.findDrillsInWeekOfDate(week);
+
 
         /*
             Sort drills by date + start time
@@ -127,6 +136,7 @@ public class DrillController {
 
         model.addAttribute("drill", drillEditRequest);
         model.addAttribute("drills", allDrills);
+        model.addAttribute("selectedDate", week);
 
         model.addAttribute("users", usersDaoService.findAll());
 

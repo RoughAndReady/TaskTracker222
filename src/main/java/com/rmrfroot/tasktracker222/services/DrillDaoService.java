@@ -23,6 +23,8 @@ public interface DrillDaoService {
 
     public Drill update( int id,Drill drill);
 
+    public List<Drill> findDrillsInWeekOfDate(String date);
+
     public List<Drill> findDrillsInWeekOfDateByID(String date, int id);
 
     public LocalDate findStartOfWeek(String date);
