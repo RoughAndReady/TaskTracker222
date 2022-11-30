@@ -182,13 +182,13 @@ public class DrillDaoImpl implements DrillDaoService {
 
     public LocalDate findStartOfWeek(String date) {
         LocalDate originalDate = convertStringToLocalDate(date);
-        LocalDate startDate = originalDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate startDate = originalDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         return startDate;
     }
 
     public LocalDate findEndOfWeek(String date) {
         LocalDate originalDate = convertStringToLocalDate(date);
-        LocalDate endDate = originalDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
+        LocalDate endDate = originalDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         return endDate;
     }
 
@@ -202,7 +202,6 @@ public class DrillDaoImpl implements DrillDaoService {
 
         for(LocalDate d : datesToAdd) {
             dates.add(d.getDayOfMonth());
-            System.out.println(d.getDayOfMonth());
         }
         dates.add(endDate.getDayOfMonth()); //LocalDate.datesUntil() is not inclusive, add final date
 
@@ -284,20 +283,18 @@ public class DrillDaoImpl implements DrillDaoService {
     public LinkedHashMap<DayOfWeek, List<Drill>> sortDrillsByDayOfWeek(List<Drill> drills) {
         LinkedHashMap<DayOfWeek, List<Drill>> drillsByDay = new LinkedHashMap<>();
 
-        List<Drill> drillsSunday = new ArrayList<>();
         List<Drill> drillsMonday = new ArrayList<>();
         List<Drill> drillsTuesday = new ArrayList<>();
         List<Drill> drillsWednesday = new ArrayList<>();
         List<Drill> drillsThursday = new ArrayList<>();
         List<Drill> drillsFriday = new ArrayList<>();
         List<Drill> drillsSaturday = new ArrayList<>();
+        List<Drill> drillsSunday = new ArrayList<>();
 
         for (Drill drill : drills) {
             LocalDate drillDate = getLocalDateOfDrill(drill);
 
-            if (drillDate.getDayOfWeek() == DayOfWeek.SUNDAY)
-                drillsSunday.add(drill);
-            else if (drillDate.getDayOfWeek() == DayOfWeek.MONDAY)
+            if (drillDate.getDayOfWeek() == DayOfWeek.MONDAY)
                 drillsMonday.add(drill);
             else if (drillDate.getDayOfWeek() == DayOfWeek.TUESDAY)
                 drillsTuesday.add(drill);
@@ -309,15 +306,17 @@ public class DrillDaoImpl implements DrillDaoService {
                 drillsFriday.add(drill);
             else if (drillDate.getDayOfWeek() == DayOfWeek.SATURDAY)
                 drillsSaturday.add(drill);
+            else if (drillDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+                drillsSunday.add(drill);
         }
 
-        drillsByDay.put(DayOfWeek.SUNDAY, drillsSunday);
         drillsByDay.put(DayOfWeek.MONDAY, drillsMonday);
         drillsByDay.put(DayOfWeek.TUESDAY, drillsTuesday);
         drillsByDay.put(DayOfWeek.WEDNESDAY, drillsWednesday);
         drillsByDay.put(DayOfWeek.THURSDAY, drillsThursday);
         drillsByDay.put(DayOfWeek.FRIDAY, drillsFriday);
         drillsByDay.put(DayOfWeek.SATURDAY, drillsSaturday);
+        drillsByDay.put(DayOfWeek.SUNDAY, drillsSunday);
 
         return drillsByDay;
     }
