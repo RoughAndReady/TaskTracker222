@@ -1,7 +1,7 @@
 let calendarStartHour = 5;
 let calendarEndHour = 22;
-let daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-let datesOfWeek = [20, 21, 22, 23, 24, 25, 26];
+let daysOfWeek = [];
+let datesOfWeek = [];
 let concurrencyMatrix = [];
 let numberOfColumns = null;
 
@@ -71,8 +71,6 @@ function generateTimeColumn(){
 }
 
 function generateDayColumns(){
-    // datesOfWeek.forEach(generateDayColumn);
-
     let concurrencyLevel = 0;
     let lastDate = -1;
 

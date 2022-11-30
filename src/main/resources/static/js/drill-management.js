@@ -186,3 +186,12 @@ function formatDateForSelector(dateToFormat){
         (dateToFormat.getDate() < 10 ? '0' : '') + dateToFormat.getDate();
     return out;
 }
+
+function verifyColorSelection(){
+    if($("#drill-color").val() === null){
+        alert("Please select a color!");
+        return false;
+    } else {
+        return true;
+    }
+}

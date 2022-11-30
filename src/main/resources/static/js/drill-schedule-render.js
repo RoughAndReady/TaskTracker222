@@ -22,7 +22,7 @@ function renderDrill(drill) {
         });
 
         if (!isConcurrent) {
-            break
+            break;
         }
     }
 

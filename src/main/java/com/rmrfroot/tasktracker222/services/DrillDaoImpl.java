@@ -235,7 +235,7 @@ public class DrillDaoImpl implements DrillDaoService {
 
         drills.forEach((k, v) -> {
             for (int i = 0; i <= v; i++) {
-                columns.add(k.toString().substring(0, 1) + k.toString().substring(1, 3).toLowerCase()
+                columns.add(k.toString().charAt(0) + k.toString().substring(1, 3).toLowerCase()
                         + (v > 0 ? "-" + i : ""));
             }
         });
@@ -277,7 +277,7 @@ public class DrillDaoImpl implements DrillDaoService {
             concurrency = Math.max(concurrency, drillConcurrency);
         }
 
-        return concurrency;
+        return Math.min(2, concurrency);
     }
 
     public LinkedHashMap<DayOfWeek, List<Drill>> sortDrillsByDayOfWeek(List<Drill> drills) {
