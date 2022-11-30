@@ -37,7 +37,15 @@ function selectDrill(id){
     updateInnerText("drill-participants",
         getListWithSpaces(parseParticipantList(selected_drill.participants)));
 
-    updateInnerText("drill-description", selected_drill.description);
+    if(selected_drill.description.length > 0) {
+        document.getElementById("detailsDiv").style.visibility = "visible";
+        document.getElementById("detailsDiv").style.position = "relative";
+
+        updateInnerText("drill-description", selected_drill.description);
+    } else {
+        document.getElementById("detailsDiv").style.visibility = "hidden";
+        document.getElementById("detailsDiv").style.position = "absolute";
+    }
 
     renderDrillBlocks();
 }

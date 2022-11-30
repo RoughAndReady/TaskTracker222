@@ -149,13 +149,14 @@
                         <h2>Participants: </h2>
                         <h2 id="drill-participants"></h2>
                     </div>
+
+                    <div id="detailsDiv" class="detailsDiv" th:if="${drills.size() != 0}">
+                        <p id="drill-description"></p>
+                    </div>
                 </div>
 
-                <hr th:if="${drills.size() != 0}">
-                
-                <div class="detailsDiv" th:if="${drills.size() != 0}">
-                    <p id="drill-description"></p>
-                </div>
+<!--                <hr th:if="${drills.size() != 0}">-->
+
             </div>
         </div>
     </main>
