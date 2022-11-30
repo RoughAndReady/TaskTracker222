@@ -120,23 +120,6 @@ function findDrillById(id) {
     return null;
 }
 
-function findUserByID() {
-    if (users !== null) {
-        for (let index in users) {
-            // console.log(drills[index].id);
-            if(users[index].id === id){
-                // console.log("Drill found: " + id);
-                return users[index];
-            }
-        }
-        console.log("Unable to find user - id not found");
-    } else {
-        console.log("Unable to find user - user list is empty");
-    }
-
-    return null;
-}
-
 function updateAllFields(){
     document.getElementById("drill-date").type = "date";
 
