@@ -162,14 +162,14 @@
                         <th class="drill-management-entry">Title</th>
                         <td class="drill-management-value-cell">
                             <input id="drill-title" class="drill-management-value" type="text"
-                                   th:name="title" placeholder="Enter title...">
+                                   th:name="title" placeholder="Enter title..." required>
                         </td>
                     </tr>
 
                     <tr>
                         <th class="drill-management-entry">Color</th>
                         <td class="drill-management-value-cell">
-                            <select id='drill-color' class="drill-management-value" th:name="color">
+                            <select id='drill-color' class="drill-management-value" th:name="color" required>
                                 <option selected disabled style="display: none" value="-1">Select one...</option>
                                 <option style="background-color: #F89EB9" value="#F89EB9">Red</option>
                                 <option style="background-color: #ECD583" value="#ECD583">Yellow</option>
@@ -185,7 +185,7 @@
                             <input id="drill-date" class="drill-management-value" type="date"
                                    onfocus="(this.type='date')"
                                    onblur="if(this.value == null || this.value.length < 1) {this.type='text'}"
-                                   th:name="date" placeholder="Choose date...">
+                                   th:name="date" placeholder="Choose date..." required>
                         </td>
                     </tr>
 
@@ -248,7 +248,7 @@
                         <th class="drill-management-entry">Location</th>
                         <td class="drill-management-value-cell">
                             <select id="drill-location" name="drill-location" class="drill-management-value"
-                                    th:name="location">
+                                    th:name="location" required>
                                 <option selected disabled style="display: none">Select location...</option>
                                 <option onclick="showCustomDrillInputField()" id="custom-location-option"
                                         class="drill-custom-location-text">Custom location
@@ -267,7 +267,7 @@
                     <tr>
                         <th class="drill-management-entry">Report To</th>
                         <td class="drill-management-value-cell">
-                            <select id='drill-report-to' class="drill-management-value" th:name="reportToID">
+                            <select id='drill-report-to' class="drill-management-value" th:name="reportToID" required>
                                 <option selected disabled style="display: none" value="-1">Select one...</option>
                                 <option th:each="user : ${users}" th:value="${user.id}"
                                         th:text="${user.firstName} + ' ' + ${user.lastName}"></option>
@@ -279,7 +279,7 @@
                         <th class="drill-management-entry">Participants</th>
                         <td class="drill-management-value-cell">
                             <select multiple id='drill-participants' class="drill-management-value"
-                                    th:name="participants">-->
+                                    th:name="participants" required>
                                 <optgroup label="Rank">
                                     <option th:each="rank : ${ranks}" th:value="${rank}" th:text="${rank}"></option>
                                 </optgroup>
@@ -315,9 +315,10 @@
 
 
                 <div class="drill-edit-button-div">
-                    <input class="drill-edit-submit" type="submit" name="submit" value="Submit">
+                    <input class="drill-edit-submit" type="submit" name="submit" value="Submit"
+                            onclick="return verifyColorSelection();">
                     <input class="drill-edit-submit drill-edit-delete" type="submit" name="delete" value="Delete"
-                           onclick="return confirm('Are you sure you want to delete this event?')">
+                           onclick="return confirm('Are you sure you want to delete this event?');">
                 </div>
             </form>
         </div>

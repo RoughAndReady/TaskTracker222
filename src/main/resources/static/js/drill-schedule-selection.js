@@ -35,11 +35,32 @@ function selectDrill(id){
     }
 
     updateInnerText("drill-participants",
-        getListWithSpaces(selected_drill.participants));
+        getListWithSpaces(parseParticipantList(selected_drill.participants)));
 
-    updateInnerText("drill-description", selected_drill.description);
+    if(selected_drill.description.length > 0) {
+        document.getElementById("detailsDiv").style.visibility = "visible";
+        document.getElementById("detailsDiv").style.position = "relative";
+
+        updateInnerText("drill-description", selected_drill.description);
+    } else {
+        document.getElementById("detailsDiv").style.visibility = "hidden";
+        document.getElementById("detailsDiv").style.position = "absolute";
+    }
 
     renderDrillBlocks();
+}
+
+function parseParticipantList(participantList){
+    let participantListOut = [];
+
+    for(let i = 0; i < participantList.length; i++){
+        if(isNaN(participantList[i])){
+            participantListOut.push(participantList[i]);
+        } else {
+            participantListOut.push(findUserFirstAndLastNameByID(participantList[i]));
+        }
+    }
+    return participantListOut;
 }
 
 function updateInnerText(elementID, newValue) {
@@ -66,9 +87,7 @@ function getListWithSpaces(list){
 function findDrillById(id) {
     if (drills !== null) {
         for (let index in drills) {
-            // console.log(drills[index].id);
             if(drills[index].id === id){
-                // console.log("Drill found: " + id);
                 return drills[index];
             }
         }
@@ -80,20 +99,6 @@ function findDrillById(id) {
     return null;
 }
 
-function findUserByID(id) {
-    if (users !== null) {
-        for (let index in users) {
-            if(users[index].id === id){
-                return users[index];
-            }
-        }
-        console.log("Unable to find user - id not found");
-    } else {
-        console.log("Unable to find user - user list is empty");
-    }
-
-    return null;
-}
 
 function findNextWeek(selectedDate){
     let nextWeek = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), (selectedDate.getDate() + 8));
@@ -110,4 +115,27 @@ function formatDateForSelector(dateToFormat){
         (dateToFormat.getMonth() + 1 < 10 ? '0' : '') + (dateToFormat.getMonth() + 1) + '-' +
         (dateToFormat.getDate() < 10 ? '0' : '') + dateToFormat.getDate();
     return out;
+}
+
+function findUserFirstAndLastNameByID(idToFind){
+    let userFound = findUserByID(idToFind);
+    
+    if(userFound !== null){
+        return userFound.firstName + " " + userFound.lastName;
+    }
+}
+
+function findUserByID(idToFind) {
+    if (users !== null) {
+        for (let index in users) {
+            if(users[index].id == idToFind){
+                return users[index];
+            }
+        }
+        console.log("Unable to find user - id not found");
+    } else {
+        console.log("Unable to find user - user list is empty");
+    }
+
+    return null;
 }
