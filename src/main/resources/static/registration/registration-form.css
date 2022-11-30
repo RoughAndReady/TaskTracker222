@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+.registration-body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+
+
+    display: flex;
+    justify-content: center;
+
+    font-family: Poppins, serif;
+    background-color: white;
+}
+
+.registration-div {
+    width: 40%;
+    margin: 0 15px 0 15px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.registration-header {
+    width: 100%;
+    margin: 15px;
+
+    font-size: 4vh;
+    text-align: center;
+    padding: 0 0 15px 0;
+    border-bottom: 1px solid silver;
+}
+
+.registration-form {
+    width: 90%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.registration-input{
+    width: 100%;
+    margin: 5px;
+
+    font-size: 2vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-field-label {
+
+}
+
+.registration-field-required::after {
+    content: "*";
+    color: red;
+    margin-left: 2px;
+}
+
+.registration-text-input {
+    padding: 5px;
+    font-size: 2vh;
+}
+
+.registration-submit {
+
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+
+    font-size: 3vh;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}

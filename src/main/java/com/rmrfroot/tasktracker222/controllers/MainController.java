@@ -1,23 +1,26 @@
-/*  This is the Controller file; definitely a work in progress
-
-    skeleton code is built from Dan Vega's video from 6:52
-        and screenshot sent by Amrin (thanks Amrin)
-*/
-
 package com.rmrfroot.tasktracker222.controllers;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
+import com.rmrfroot.tasktracker222.entities.User;
+import com.rmrfroot.tasktracker222.services.UsersDaoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@RestController
-@CrossOrigin
+import java.security.Principal;
+
+@Controller
 public class MainController {
-    // missing: .getInstance();
+
+    @Autowired
+    private PoolClientInterface poolClientInterface;
+
+    @Autowired
+    private UsersDaoService usersDaoService;
 
     @GetMapping("/")
-    public String MainController() { //missing: parameter for MainController()
-        // missing: .addAttribute(); multiple times to argument
-        return "This is a test string";
+    public String home(Model model, Principal principal) {
+        return "redirect:/drill-schedule-recipient";
     }
 }

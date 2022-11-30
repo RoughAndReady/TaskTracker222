@@ -1,0 +1,86 @@
+//Generated http request tests for drill schedule
+//DrillSchedulerController
+###
+GET http://localhost:8080/drill-schedule-recipient
+
+<> 2022-10-05T184240.200.html
+
+###
+GET http://localhost:8080/drill-schedule-manager
+
+<> 2022-10-05T184252.200.html
+
+###
+GET http://localhost:8080/drill-schedule-recipient/drills
+
+<> 2022-10-05T184257.200.html
+
+###
+GET http://localhost:8080/drill-schedule-recipient/drills/{{$uuid}}
+
+<> 2022-10-05T193420.200.html
+
+###
+PUT http://localhost:8080/
+
+###
+DELETE http://localhost:8080/
+
+<> 2022-10-05T184338.200.html
+
+//Generated http request tests for drill collection
+//DrillSCollectionController
+###
+GET http://localhost:8080/drillCollection
+
+<> 2022-10-05T184432.200.html
+<> 2022-10-05T184405.200.html
+
+###
+GET http://localhost:8080/drillCollection/{{$uuid}}
+
+<> 2022-10-05T193427.200.html
+
+###
+POST http://localhost:8080/drillCollection
+
+<> 2022-10-05T184444.200.html
+
+###
+PUT http://localhost:8080/drillCollection/{{$uuid}}
+
+###
+###
+DELETE http://localhost:8080/drillCollection/{{$uuid}}
+
+<> 2022-10-05T193352.200.html
+
+//Generated http request tests for user
+//UserController
+###
+GET http://localhost:8080/user
+
+<> 2022-10-06T193038.200.html
+
+###
+GET http://localhost:8080/user/{{$uuid}}
+
+<> 2022-10-06T193114.200.html
+
+###
+GET http://localhost:8080/user/accessControl
+
+<> 2022-10-06T193153.200.html
+
+###
+GET http://localhost:8080/user/addUser
+
+<> 2022-10-06T193347.200.html
+
+###
+PUT http://localhost:8080/user/{{$uuid}}
+
+###
+DELETE http://localhost:8080/user/{{$uuid}}
+
+<> 2022-10-06T193734.200.html

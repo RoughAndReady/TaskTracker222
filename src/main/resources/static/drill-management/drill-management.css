@@ -1,0 +1,196 @@
+
+body {
+    min-height: 100%;
+    margin: 0;
+}
+
+i {
+    transition: all 0.3s;
+}
+
+a {
+    transition: all 0.3s;
+    user-select: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+div {
+    transition: all 0.3s;
+}
+
+span {
+    transition: all 0.3s;
+}
+
+label {
+    font-family: Poppins, serif;
+    font-size: 3vh;
+
+    text-align: center;
+}
+
+input {
+    margin-bottom: 2vh;
+
+    font-family: Poppins, serif;
+}
+
+textarea {
+    resize: none;
+
+    font-family: Poppins, serif;
+}
+
+.drill-management-main {
+    width: 100%;
+
+    display: flex;
+    overflow: hidden;
+}
+
+.drill-editor-div {
+    padding-left: 10px;
+}
+
+
+.drill-table-div {
+    /*width: 50rem !important;*/
+}
+
+.drill-table {
+    width: 100%;
+    /*margin: 10px;*/
+    padding: 10px;
+
+    display: table;
+    flex-direction: row;
+
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.drill-table-header {
+    width: available;
+
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: flex-start;*/
+    /*flex-grow: 1;*/
+
+    text-align: left;
+}
+
+.drill-table-header-entry {
+    /*display: flex;*/
+    padding: 5px 5px 5px 10px;
+
+    text-align: left;
+    drill-select: none;
+    /*justify-content: flex-start;*/
+}
+
+.drill-table-row {
+    background-color: unset;
+    transition: background-color 0.3s;
+}
+.drill-table-row:hover {
+    background-color: rgba(169, 209, 231, 0.31);
+    transition: background-color 0.3s;
+}
+
+.drill-table-row-selected {
+    background-color: #a1c8db;
+}
+
+.drill-table-entry {
+    /*display: flex;*/
+    padding: 5px 5px 5px 10px;
+
+    justify-content: center;
+    text-align: left;
+    user-select: none;
+}
+
+.drill-management-editor-div {
+    /*padding: 10px;*/
+
+    display: flex;
+
+    font-size: 3vh;
+}
+
+.drill-management-table-form {
+    width: 100%;
+}
+
+.drill-management-table {
+    width: 90%;
+    margin-right: 2vw;
+
+    display: table;
+    flex-direction: row;
+
+    /*table-layout: fixed;*/
+}
+
+.drill-management-table-row {
+    /*padding-top: 5px;*/
+    /*margin-right: 2vh;*/
+}
+
+.drill-management-entry {
+    width: 20%;
+    align-content: center;
+    word-wrap: break-word;
+
+    text-align: left;
+    padding-right: .25vw;
+}
+
+.drill-management-value-cell {
+    height: 5vh;
+    line-height: 5vh;
+    width: 80%;
+    padding: 3px;
+
+    align-content: center;
+    vertical-align: middle;
+}
+
+.drill-management-value {
+    width: 100%;
+    display: block;
+
+    margin-bottom: 0;
+    padding: 5px;
+    font-size: 2vh;
+
+    box-sizing: border-box;
+}
+
+.drill-edit-button-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.drill-edit-submit {
+    width: 20rem;
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    color: white;
+    font-size: 4vh;
+    background-color: #AEE583;
+    border: none;
+    border-radius: 4px;
+}
+
+.drill-edit-delete {
+    margin-left: 2rem;
+    background-color: #b93f3f;
+}
