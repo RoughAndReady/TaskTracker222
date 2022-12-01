@@ -6,10 +6,12 @@ import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,14 +24,15 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
-//@SpringBootTest
 class UserControllerTest {
 
     //@InjectMocks
@@ -74,8 +77,9 @@ class UserControllerTest {
                 "workCenter","flight",teamList)));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+
                 //.andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(1)))
-                .andExpect(status().isOk());
+                .andExpect(status().isFound());
     }
 
     @Test

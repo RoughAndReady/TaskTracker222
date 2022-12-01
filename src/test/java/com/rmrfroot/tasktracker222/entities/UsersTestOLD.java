@@ -1,12 +1,6 @@
 package com.rmrfroot.tasktracker222.entities;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class UsersTest {
+class UsersTestOLD {
 /*
     int id = 12345;
     String email = "bfrey@root.edu";
@@ -24,6 +18,10 @@ class UsersTest {
           reg_date, up_date,
           admin, rank, workCenter,
           flight, teamList);
+
+          User(String userName, String firstName, String lastName, String militaryEmail, String civilianEmail, String email,
+                String phoneNumber, String officeNumber, String rank, String workCenter,
+                String flight, ArrayList<String> teams)
     @Test
     void getId() {
         user.setId(id);
