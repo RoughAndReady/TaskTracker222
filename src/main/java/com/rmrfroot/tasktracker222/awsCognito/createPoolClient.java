@@ -52,24 +52,29 @@ public class createPoolClient implements PoolClientInterface {
 
     @Override
     public void deleteUserByUsername(String username) {
-        AWSCognitoIdentityProvider cognitoClient = createCognitoClient();
+        try {
+            AWSCognitoIdentityProvider cognitoClient = createCognitoClient();
 
         /*
             Sign user out all devices
          */
-        AdminUserGlobalSignOutRequest adminUserGlobalSignOutRequest=new AdminUserGlobalSignOutRequest();
-        adminUserGlobalSignOutRequest.withUsername(username).withUserPoolId(USER_POOL_ID);
-        cognitoClient.adminUserGlobalSignOut(adminUserGlobalSignOutRequest);
+            AdminUserGlobalSignOutRequest adminUserGlobalSignOutRequest = new AdminUserGlobalSignOutRequest();
+            adminUserGlobalSignOutRequest.withUsername(username).withUserPoolId(USER_POOL_ID);
+            cognitoClient.adminUserGlobalSignOut(adminUserGlobalSignOutRequest);
 
         /*
             Delete user
          */
-        AdminDeleteUserRequest request=new AdminDeleteUserRequest();
-        request.withUsername(username)
-                .withUserPoolId(USER_POOL_ID);
-        cognitoClient.adminDeleteUser(request);
+            AdminDeleteUserRequest request = new AdminDeleteUserRequest();
+            request.withUsername(username)
+                    .withUserPoolId(USER_POOL_ID);
+            cognitoClient.adminDeleteUser(request);
 
-        cognitoClient.shutdown();
-        System.out.println("Deleted user [" + username + "]");
+            cognitoClient.shutdown();
+            System.out.println("Deleted user [" + username + "]");
+        } catch (Exception e){
+            System.out.println("There was a problem deleting user [" + username + "].");
+            e.printStackTrace();
+        }
     }
 }

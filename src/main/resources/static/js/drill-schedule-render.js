@@ -12,6 +12,8 @@ function renderDrill(drill) {
         let startBlockID = getDateOfDrill(drill) + "-" + getStartTimeOfDrill(drill) + (col === 0 ? "" : "-" + col);
         let endBlockID = getDateOfDrill(drill) + "-" + getEndTimeOfDrill(drill) + (col === 0 ? "" : "-" + col);
 
+        console.log(startBlockID + "\n" + endBlockID);
+
         blocks = $('#' + startBlockID).nextUntil('#' + endBlockID).add('#' + startBlockID);
 
         let isConcurrent = false;

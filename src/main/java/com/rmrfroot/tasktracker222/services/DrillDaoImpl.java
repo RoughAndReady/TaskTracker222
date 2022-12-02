@@ -267,8 +267,7 @@ public class DrillDaoImpl implements DrillDaoService {
                     Date startTimeCompare = combineDateAndTime(drillToCompare.getDate(), drillToCompare.getStartTime());
                     Date endTimeCompare = combineDateAndTime(drillToCompare.getDate(), drillToCompare.getEndTime());
 
-                    if ((startTime.before(endTimeCompare) || startTime.equals(endTimeCompare)) &&
-                            (startTimeCompare.before(endTime) || startTimeCompare.equals(endTime))) {
+                    if (startTime.before(endTimeCompare) && startTimeCompare.before(endTime)) {
                         drillConcurrency++;
                     }
                 }

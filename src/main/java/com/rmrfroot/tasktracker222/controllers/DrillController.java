@@ -37,6 +37,14 @@ public class DrillController {
         return "redirect:/drill-schedule-recipient/week/" + weekOf;
     }
 
+    @GetMapping("/drill-schedule-recipient/week/")
+    public String drillScheduleRecipientGenericWeek(){
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String weekOf = dateFormat.format(LocalDateTime.now());
+
+        return "redirect:/drill-schedule-recipient/week/" + weekOf;
+    }
+
     @GetMapping("/drill-schedule-manager")
     public String drillScheduleManagerGeneric(){
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -129,7 +137,7 @@ public class DrillController {
             Add a placeholder drill that will be used to create a new drill if requested
          */
         Drill newDrillRequest = new Drill();
-        newDrillRequest.setTitle("+ New Drill");
+        newDrillRequest.setTitle("+ New Event");
         newDrillRequest.setId(-2);
         allDrills.add(0, newDrillRequest);
 
