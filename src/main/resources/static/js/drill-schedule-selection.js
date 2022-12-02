@@ -16,7 +16,7 @@ function selectDrill(id){
     updateInnerText("drill-title", selected_drill.title);
 
     updateInnerText("drill-date",
-        getDayOfDrill(selected_drill) + ", " +
+        getDayOfDrill(selected_drill).substring(0, 3) + ", " +
         getCompleteDateOfDrill(selected_drill))
 
     updateInnerText("drill-time",

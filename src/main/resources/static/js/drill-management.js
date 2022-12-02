@@ -170,9 +170,31 @@ function formatDateForSelector(dateToFormat){
     return out;
 }
 
-function verifyColorSelection(){
-    if($("#drill-color").val() === null){
+function verifyAllFields() {
+    console.log($("#drill-start-time").val());
+    if($("#drill-title").val().length == 0) {
+        alert("Please enter a title!");
+        return false;
+    } else if($("#drill-color").val() === null) {
         alert("Please select a color!");
+        return false;
+    } else if($("#drill-date").val().length == 0) {
+        alert("Please select a date!");
+        return false;
+    } else if($("#drill-start-time").val().length == 0) {
+        alert("Please select a start time!");
+        return false;
+    } else if($("#drill-end-time").val().length == 0) {
+        alert("Please select an end time!");
+        return false;
+    } else if($("#drill-location").val() === null){
+        alert("Please select a location!");
+        return false;
+    } else if($("#drill-report-to").val() === null){
+        alert("Please select a person to report to!");
+        return false;
+    } else if($("#drill-participants").val().length == 0){
+        alert("Please select participants!");
         return false;
     } else {
         return true;

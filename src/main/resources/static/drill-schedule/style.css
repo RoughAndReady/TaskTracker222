@@ -314,6 +314,10 @@ h3 {
     padding-top: 1.5rem;
 }
 
+.drill-description {
+    font-size: 1.8vh;
+}
+
 /* sample events */
 .event1 {
     background-color: var(--color-warning);
