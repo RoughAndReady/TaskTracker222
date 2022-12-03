@@ -200,12 +200,12 @@ public class DrillDaoImpl implements DrillDaoService {
 
         List<LocalDate> datesToAdd = startDate.datesUntil(endDate).collect(Collectors.toList());
 
-        for(LocalDate d : datesToAdd) {
+        for (LocalDate d : datesToAdd) {
             dates.add(d.getDayOfMonth());
         }
         dates.add(endDate.getDayOfMonth()); //LocalDate.datesUntil() is not inclusive, add final date
 
-        return dates.stream().mapToInt(i->i).toArray();
+        return dates.stream().mapToInt(i -> i).toArray();
     }
 
     public LocalDate convertStringToLocalDate(String date) {
@@ -268,7 +268,20 @@ public class DrillDaoImpl implements DrillDaoService {
                     Date endTimeCompare = combineDateAndTime(drillToCompare.getDate(), drillToCompare.getEndTime());
 
                     if (startTime.before(endTimeCompare) && startTimeCompare.before(endTime)) {
-                        drillConcurrency++;
+
+                        for (Drill drillToCompare2 : drills) {
+                            if (drillToCompare2 != drill && drillToCompare2 != drillToCompare) {
+                                Date startTimeCompare2 = combineDateAndTime(drillToCompare2.getDate(), drillToCompare2.getStartTime());
+                                Date endTimeCompare2 = combineDateAndTime(drillToCompare2.getDate(), drillToCompare2.getEndTime());
+
+                                if (startTimeCompare2.before(endTime) && startTime.before(endTimeCompare2) &&
+                                        startTimeCompare2.before(endTimeCompare) && startTimeCompare.before(endTimeCompare2)) {
+                                    drillConcurrency = 2;
+                                } else if(drillConcurrency < 2) {
+                                    drillConcurrency = 1;
+                                }
+                            }
+                        }
                     }
                 }
             }
