@@ -171,7 +171,7 @@ public class DrillController {
             drillDaoService.update(drill.getId(), drill);
         }
 
-        return "redirect:/drill-schedule-manager";
+        return "redirect:/drill-schedule-manager/week/" + drillDaoService.convertDateToString(drill.getDate());
     }
 
     @PostMapping(value = "/edit-drill", params = "delete")

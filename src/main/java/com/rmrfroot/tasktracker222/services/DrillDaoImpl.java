@@ -214,6 +214,13 @@ public class DrillDaoImpl implements DrillDaoService {
                 Integer.parseInt(date.substring(8, 10)));
     }
 
+    public String convertDateToString(Date date){
+        LocalDate convertedDate = convertDateToLocalDate(date);
+        return convertedDate.getYear() + "-" +
+                (convertedDate.getMonthValue() > 10 ? "" : "0") + convertedDate.getMonthValue() + "-" +
+                (convertedDate.getDayOfMonth() > 10 ? "" : "0") + convertedDate.getDayOfMonth();
+    }
+
     public LocalDate getLocalDateOfDrill(Drill drill) {
         return convertDateToLocalDate(drill.getDate());
     }
