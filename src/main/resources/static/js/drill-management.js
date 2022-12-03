@@ -7,6 +7,8 @@ let selected_drill = null;
 
 let users = null;
 
+let descriptionCharacterLimit = 1000;
+
 function drillManagementSetup() {
 }
 
@@ -197,6 +199,8 @@ function verifyAllFields() {
     } else if (startAndEndTimeAreInvalid()){
         alert("Start time cannot be at or after end time")
         return false;
+    } else if (isDescriptionCharacterLimitInvalid()) {
+        return false;
     } else {
         return true;
     }
@@ -214,4 +218,15 @@ function startAndEndTimeAreInvalid(){
     endTime.setMinutes(parseInt(endTimeString.substring(3,5)));
 
     return startTime >= endTime;
+}
+
+function isDescriptionCharacterLimitInvalid(){
+    let descriptionLength = $("#drill-description").val().length;
+
+    if(descriptionLength > descriptionCharacterLimit){
+        alert("Description is above character limit of 1000. Current length is " + descriptionLength + ".");
+        return true;
+    } else {
+        return false;
+    }
 }
