@@ -197,6 +197,7 @@ public class UsersDaoServiceImpl implements UsersDaoService {
             System.out.println("No users have the admin attribute yet. User [" + userName + "] has been given " +
                             "admin attribute to assist with setup.");
             user.setAdmin(true);
+            user.setApproved(true);
         }
 
         usersDAO.save(user);

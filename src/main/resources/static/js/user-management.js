@@ -6,7 +6,7 @@ let selected_user = null;
 function userManagementSetup() {
 }
 
-function selectInitialUser(){
+function selectInitialUser() {
     updateSelectedUser(users[0].id);
 }
 
@@ -30,25 +30,33 @@ function updateSelectedUser(id) {
     $('#input-teams').val(selected_user.teams).trigger('chosen:updated');
     $('#input-admin').val(selected_user.admin ? "true" : "false").trigger('chosen:updated');
 
+    updateUserApprovedStatus(selected_user.approved);
+
     if (users !== null) {
         for (let index in users) {
             if (users[index].id === selected_user_id) {
-                document.getElementById('user-list-row-' + users[index].id).className = "user-table-row-selected";
-            }
-            else{
-                document.getElementById('user-list-row-' + users[index].id).className = "user-table-row";
+                if (users[index].approved) {
+                    document.getElementById('user-list-row-' + users[index].id).className = "user-table-row-selected";
+                } else {
+                    document.getElementById('user-list-row-' + users[index].id).className = "user-table-row-unapproved-selected";
+                }
+            } else {
+                if (users[index].approved) {
+                    document.getElementById('user-list-row-' + users[index].id).className = "user-table-row";
+                } else {
+                    document.getElementById('user-list-row-' + users[index].id).className = "user-table-row-unapproved";
+                }
             }
         }
     }
 
 }
 
-function updateFieldValue(elementID, newValue){
+function updateFieldValue(elementID, newValue) {
     console.log("Updating value for " + elementID + " to " + newValue);
-    if(newValue !== null && newValue !== undefined){
+    if (newValue !== null && newValue !== undefined) {
         document.getElementById(elementID).value = newValue;
-    }
-    else{
+    } else {
         document.getElementById(elementID).value = "";
     }
 }
@@ -57,7 +65,7 @@ function findUserById(id) {
     if (users !== null) {
         for (let index in users) {
             // console.log(users[index].id);
-            if(users[index].id === id){
+            if (users[index].id === id) {
                 // console.log("User found: " + id);
                 return users[index];
             }
@@ -68,4 +76,40 @@ function findUserById(id) {
     }
 
     return null;
+}
+
+function updateUserApprovedStatus(approved) {
+    if (approved) {
+        document.getElementById("user-submit-button").value = "Submit";
+        document.getElementById("user-submit-button").onclick = null;
+
+        document.getElementById("user-delete-button").value = "Delete";
+        document.getElementById("user-delete-button").onclick = confirmUserDeletion;
+    } else {
+        document.getElementById("user-submit-button").value = "Approve";
+        document.getElementById("user-submit-button").onclick = confirmUserApprove;
+
+        document.getElementById("user-delete-button").value = "Deny";
+        document.getElementById("user-delete-button").onclick = confirmUserDeny;
+    }
+}
+
+function confirmUserDeletion() {
+    return confirm('Are you sure you want to delete this user?');
+}
+
+function confirmUserDeny() {
+    return confirm('Are you sure you want to deny this user?');
+}
+
+function confirmUserApprove() {
+    return confirm('Are you sure you want to approve this user?');
+}
+
+function changeToUserSubmit() {
+    document.getElementById("user-submit-button").value = "Submit";
+}
+
+function changeToUserDelete() {
+    document.getElementById("user-delete-button").value = "Delete";
 }
