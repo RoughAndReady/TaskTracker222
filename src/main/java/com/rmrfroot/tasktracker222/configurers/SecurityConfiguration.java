@@ -28,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/",true) // default page after a user is successful signIN
                 .and()
                 .logout()
-                .logoutSuccessUrl("https://tasktracker222.auth.us-west-1.amazoncognito.com/logout?client_id=30pr4eskaka76d1r7ocbpvvn7k" +
+                .logoutSuccessUrl("https://" + System.getenv("SUBDOMAIN") + ".auth.us-west-1.amazoncognito.com/logout?client_id=30pr4eskaka76d1r7ocbpvvn7k" +
                         "&logout_uri=http://localhost:8080/")
         ;
     }
