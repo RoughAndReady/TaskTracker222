@@ -86,8 +86,11 @@
                     </script>
 
 
-                    <td th:text="${user.firstName} + ' ' + ${user.lastName}"
+                    <td th:if="${user.approved}" th:text="${user.firstName} + ' ' + ${user.lastName}"
                         class="user-table-entry"></td>
+                    <td th:unless="${user.approved}" th:text="${'[PENDING] ' + user.firstName} + ' ' + ${user.lastName}"
+                        class="user-table-entry"></td>
+
                     <td th:text="${user.rank}"
                         class="user-table-entry"></td>
                     <td th:text="${user.workCenter}"
@@ -204,9 +207,8 @@
                     </table>
 
                     <div class="user-edit-button-div">
-                        <input class="user-edit-submit" type="submit" name="submit" value="Submit">
-                        <input class="user-edit-submit user-edit-delete" type="submit" name="delete" value="Delete"
-                               onclick="return confirm('Are you sure you want to delete this user?')">
+                        <input id="user-submit-button" class="user-edit-submit" type="submit" name="submit" value="Submit" onsubmit="changeToUserSubmit();">
+                        <input id="user-delete-button" class="user-edit-submit user-edit-delete" type="submit" name="delete" value="Delete" onsubmit="changeToUserDelete();">
                     </div>
                 </form>
             </div>

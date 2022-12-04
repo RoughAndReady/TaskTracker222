@@ -42,6 +42,9 @@ public class User implements Comparable<User>{
     @Column(name = "admin")
     private boolean admin;
 
+    @Column(name = "approved")
+    private boolean approved;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -526,4 +529,11 @@ public class User implements Comparable<User>{
         return admin;
     }
 
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
 }

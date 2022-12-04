@@ -102,6 +102,18 @@ textarea {
     background-color: #a1c8db;
 }
 
+.user-table-row-unapproved {
+    background-color: rgba(203, 126, 126, 0.61);
+}
+
+.user-table-row-unapproved:hover {
+    background-color: rgba(203, 126, 126, 0.93);
+}
+
+.user-table-row-unapproved-selected {
+    background-color: rgba(206, 70, 70, 0.95);
+}
+
 .user-table-entry {
     /*display: flex;*/
     padding: 5px 5px 5px 10px;
