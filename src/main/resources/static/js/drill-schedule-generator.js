@@ -96,7 +96,7 @@ function generateDayColumn(date, concurrencyLevel){
         for(let section = 1; section <= 4; section++){
             let box = document.createElement('div');
             box.className = "q" + section;
-            box.id = date + "-" + (hour < 10 ? "0" : "") + hour +
+            box.id = (date < 10 ? "0" : "") + date + "-" + (hour < 10 ? "0" : "") + hour +
                 ((15 * (section - 1)) === 0 ? "00" : (15 * (section - 1))) +
                 (concurrencyLevel > 0 ? "-" + concurrencyLevel : "");
             box.value = -1;

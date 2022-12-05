@@ -19,6 +19,7 @@ import java.util.*;
 
 /**
  * Controller class for User
+ *
  * @author Visoth
  * @author Noel
  */
@@ -40,25 +41,25 @@ public class UserController {
      * Main Page for User Management
      * shows the list of the users in the system
      * and allows admin to change an user's attribute
+     *
      * @param model for the model view controller
      * @return front-end HTML
      */
     @GetMapping("/user-manager")
-    public String getUsersCollection(Model model, Principal principal) {
+    public String userManager(Model model, Principal principal) {
 
         /*
             If user exists and is admin, proceed.
             If user exists and is not admin, redirect to drill schedule.
             if user does not exist, redirect to new user registration.
          */
-        try{
-            if(!usersDaoService.findUserByUsername(principal.getName()).isAdmin()){
+        try {
+            if (!usersDaoService.findUserByUsername(principal.getName()).isAdmin()) {
                 return "redirect:/drill-schedule-recipient";
             }
         } catch (NullPointerException n) {
             return "redirect:/new-user-registration";
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -67,7 +68,7 @@ public class UserController {
 
         try {
             Collections.sort(allUsers);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Could not sort user list.");
             e.printStackTrace();
         }
@@ -85,6 +86,7 @@ public class UserController {
 
     /**
      * Updates selected user's attributes
+     *
      * @param request User class to be changed
      * @return to the UserManagement site
      */
@@ -94,13 +96,13 @@ public class UserController {
             User u = usersDaoService.findById(request.getId());
 
             // Translate blank values to null since POST does not allow null values
-            if(request.getRank().equals(""))
+            if (request.getRank().equals(""))
                 request.setRank(null);
-            if(request.getFlight().equals(""))
+            if (request.getFlight().equals(""))
                 request.setFlight(null);
-            if(request.getWorkCenter().equals(""))
+            if (request.getWorkCenter().equals(""))
                 request.setWorkCenter(null);
-            if(request.getTeams().isEmpty())
+            if (request.getTeams().isEmpty())
                 request.setTeams(null);
 
 
@@ -115,12 +117,12 @@ public class UserController {
             u.setFlight(request.getFlight());
             u.setTeams(request.getTeams());
             u.setAdmin(request.isAdmin());
+            u.setApproved(true);
 
             usersDaoService.update(u.getId(), u);
 
             return "redirect:/user-manager";
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -128,17 +130,18 @@ public class UserController {
 
     /**
      * Delete a user in the system
+     *
      * @param request User to be deleted
      * @return to UserManagement site
      */
     @PostMapping(value = "/user-manager", params = "delete")
     public String userEditDelete(@ModelAttribute("userEditRequest") User request, Principal principal) {
-        try{
+        try {
             User userToDelete = usersDaoService.findUsersById(request.getId());
 
             poolClientInterface.deleteUserByUsername(userToDelete.getUserName());
             usersDaoService.deleteById(userToDelete.getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/error";
         }
@@ -148,25 +151,24 @@ public class UserController {
     /**
      * Determines the User's role
      * and redirects to a page depending on the role
-     * @param model view controller
+     *
+     * @param model     view controller
      * @param principal user's credentials
      * @return a page determined from the user's role
      */
     @GetMapping("users/accessControl")
-    public String accessControl(Model model,Principal principal) {
+    public String accessControl(Model model, Principal principal) {
         try {
-            User user=usersDaoService.findUserByUsername(principal.getName());
+            User user = usersDaoService.findUserByUsername(principal.getName());
             model.addAttribute("user", user);
-            if(user.isAdmin()) {
+            if (user.isAdmin()) {
                 System.out.println("manager-page");
                 return "redirect:/drill-schedule-manager";
-            }
-            else{
-               System.out.println("recipient-page");
+            } else {
+                System.out.println("recipient-page");
                 return "redirect:/drill-schedule-recipient";
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("No user found");
             return "redirect:/users/newUser";
         }
@@ -174,12 +176,13 @@ public class UserController {
 
     /**
      * Adds a user to the system
-     * @param model view controller
+     *
+     * @param model     view controller
      * @param principal user's credentials
      * @return a registration form to collect user's information
      */
     @GetMapping("/new-user-registration")
-    public String addUser(Model model,Principal principal) {
+    public String addUser(Model model, Principal principal) {
         User user = new User();
         model.addAttribute("newUser", user);
 
@@ -199,14 +202,15 @@ public class UserController {
 
     /**
      * Add a user to the database
+     *
      * @param validateUser confirms user is a new user
-     * @param errors Errors for exception
-     * @param model view controller
-     * @param principal user's credentials
+     * @param errors       Errors for exception
+     * @param model        view controller
+     * @param principal    user's credentials
      * @return to access control
      */
     @PostMapping("/register-new-user")
-        public String saveUser(@Valid @ModelAttribute("users")ValidateUser validateUser, BindingResult errors, Model model, Principal principal) {
+    public String saveUser(@Valid @ModelAttribute("users") ValidateUser validateUser, BindingResult errors, Model model, Principal principal) {
 
         try {
             List<String> userInfoList = poolClientInterface.getUserInfo(principal.getName());
@@ -227,14 +231,28 @@ public class UserController {
                         validateUser.getTeams()
                 );
                 System.out.println("New user just added to database: " + principal.getName());
-            }else{
+            } else {
                 return "redirect:/";
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Could not register user: " + principal.getName());
             e.printStackTrace();
             return "redirect:/error";
         }
+        return "redirect:/";
+    }
+
+    @GetMapping("/pending-approval")
+    public String pendingApproval(Principal principal) {
+        User u = usersDaoService.findUserByUsername(principal.getName());
+        try {
+            if (u.isApproved()) {
+                return "redirect:/";
+            } else {
+                return "PendingApproval";
+            }
+        } catch (Exception e) {
             return "redirect:/";
+        }
     }
 }

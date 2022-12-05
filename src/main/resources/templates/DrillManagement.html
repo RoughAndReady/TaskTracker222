@@ -315,9 +315,9 @@
 
 
                 <div class="drill-edit-button-div">
-                    <input class="drill-edit-submit" type="submit" name="submit" value="Submit"
-                            onclick="return verifyColorSelection();">
-                    <input class="drill-edit-submit drill-edit-delete" type="submit" name="delete" value="Delete"
+                    <input id="drill-submit-button" class="drill-edit-submit" type="submit" name="submit" value="Submit"
+                            onclick="return verifyAllFields();">
+                    <input id="drill-delete-button" class="drill-edit-submit drill-edit-delete" type="submit" name="delete" value="Delete"
                            onclick="return confirm('Are you sure you want to delete this event?');">
                 </div>
             </form>

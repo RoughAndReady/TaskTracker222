@@ -2,6 +2,7 @@ package com.rmrfroot.tasktracker222.controllers;
 
 import com.rmrfroot.tasktracker222.entities.Group;
 import com.rmrfroot.tasktracker222.entities.Drill;
+import com.rmrfroot.tasktracker222.entities.User;
 import com.rmrfroot.tasktracker222.services.DrillDaoService;
 import com.rmrfroot.tasktracker222.services.UsersDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,15 @@ public class DrillController {
     }
 
     @GetMapping("/drill-schedule-recipient")
-    public String drillScheduleRecipientGeneric(){
+    public String drillScheduleRecipientGeneric() {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String weekOf = dateFormat.format(LocalDateTime.now());
+
+        return "redirect:/drill-schedule-recipient/week/" + weekOf;
+    }
+
+    @GetMapping("/drill-schedule-recipient/week/")
+    public String drillScheduleRecipientGenericWeek() {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String weekOf = dateFormat.format(LocalDateTime.now());
 
@@ -38,7 +47,7 @@ public class DrillController {
     }
 
     @GetMapping("/drill-schedule-manager")
-    public String drillScheduleManagerGeneric(){
+    public String drillScheduleManagerGeneric() {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String weekOf = dateFormat.format(LocalDateTime.now());
 
@@ -53,16 +62,21 @@ public class DrillController {
     public String drillScheduleRecipient(Model model, Principal principal, @PathVariable String week) {
 
         /*
+            If user is not approved, redirect to pending approval page.
             If user exists, add admin status to model.
             if user does not exist, redirect to new user registration.
          */
-        try{
-            model.addAttribute("isAdmin",
-                    usersDaoService.findUserByUsername(principal.getName()).isAdmin());
+        try {
+            User u = usersDaoService.findUserByUsername(principal.getName());
+            if (!u.isApproved()) {
+                return "redirect:/pending-approval";
+            } else {
+                model.addAttribute("isAdmin",
+                        u.isAdmin());
+            }
         } catch (NullPointerException n) {
             return "redirect:/new-user-registration";
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -75,7 +89,7 @@ public class DrillController {
          */
         try {
             Collections.sort(allDrills);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -100,14 +114,13 @@ public class DrillController {
             If user exists and is not admin, redirect to drill schedule.
             if user does not exist, redirect to new user registration.
          */
-        try{
-            if(!usersDaoService.findUserByUsername(principal.getName()).isAdmin()){
+        try {
+            if (!usersDaoService.findUserByUsername(principal.getName()).isAdmin()) {
                 return "redirect:/drill-schedule-recipient";
             }
         } catch (NullPointerException n) {
             return "redirect:/new-user-registration";
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -121,7 +134,7 @@ public class DrillController {
          */
         try {
             Collections.sort(allDrills);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -129,7 +142,7 @@ public class DrillController {
             Add a placeholder drill that will be used to create a new drill if requested
          */
         Drill newDrillRequest = new Drill();
-        newDrillRequest.setTitle("+ New Drill");
+        newDrillRequest.setTitle("+ New Event");
         newDrillRequest.setId(-2);
         allDrills.add(0, newDrillRequest);
 
@@ -150,28 +163,27 @@ public class DrillController {
     }
 
     @PostMapping(value = "/edit-drill", params = "submit")
-    public String editDrill(@ModelAttribute("drill") Drill drill, @ModelAttribute("custom-location") String customLocation){
+    public String editDrill(@ModelAttribute("drill") Drill drill, @ModelAttribute("custom-location") String customLocation) {
 
-        if(customLocation != null && customLocation.length() > 0){
+        if (customLocation != null && customLocation.length() > 0) {
             drill.setLocation(customLocation);
         }
 
-        if(drillDaoService.findById(drill.getId()) == null){
+        if (drillDaoService.findById(drill.getId()) == null) {
             drillDaoService.save(drill);
-        }
-        else {
+        } else {
             drillDaoService.update(drill.getId(), drill);
         }
 
-        return "redirect:/drill-schedule-manager";
+        return "redirect:/drill-schedule-manager/week/" + drillDaoService.convertDateToString(drill.getDate());
     }
 
     @PostMapping(value = "/edit-drill", params = "delete")
     public String deleteDrill(@ModelAttribute("drill") Drill request) {
-        try{
+        try {
             Drill drillToDelete = drillDaoService.findById(request.getId());
             drillDaoService.deleteById(drillToDelete.getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Could not delete drill");
             return "redirect:/error";
         }

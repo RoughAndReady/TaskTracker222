@@ -200,18 +200,25 @@ public class DrillDaoImpl implements DrillDaoService {
 
         List<LocalDate> datesToAdd = startDate.datesUntil(endDate).collect(Collectors.toList());
 
-        for(LocalDate d : datesToAdd) {
+        for (LocalDate d : datesToAdd) {
             dates.add(d.getDayOfMonth());
         }
         dates.add(endDate.getDayOfMonth()); //LocalDate.datesUntil() is not inclusive, add final date
 
-        return dates.stream().mapToInt(i->i).toArray();
+        return dates.stream().mapToInt(i -> i).toArray();
     }
 
     public LocalDate convertStringToLocalDate(String date) {
         return LocalDate.of(Integer.parseInt(date.substring(0, 4)),
                 Integer.parseInt(date.substring(5, 7)),
                 Integer.parseInt(date.substring(8, 10)));
+    }
+
+    public String convertDateToString(Date date){
+        LocalDate convertedDate = convertDateToLocalDate(date);
+        return convertedDate.getYear() + "-" +
+                (convertedDate.getMonthValue() > 10 ? "" : "0") + convertedDate.getMonthValue() + "-" +
+                (convertedDate.getDayOfMonth() > 10 ? "" : "0") + convertedDate.getDayOfMonth();
     }
 
     public LocalDate getLocalDateOfDrill(Drill drill) {
@@ -267,9 +274,21 @@ public class DrillDaoImpl implements DrillDaoService {
                     Date startTimeCompare = combineDateAndTime(drillToCompare.getDate(), drillToCompare.getStartTime());
                     Date endTimeCompare = combineDateAndTime(drillToCompare.getDate(), drillToCompare.getEndTime());
 
-                    if ((startTime.before(endTimeCompare) || startTime.equals(endTimeCompare)) &&
-                            (startTimeCompare.before(endTime) || startTimeCompare.equals(endTime))) {
-                        drillConcurrency++;
+                    if (startTime.before(endTimeCompare) && startTimeCompare.before(endTime)) {
+
+                        for (Drill drillToCompare2 : drills) {
+                            if (drillToCompare2 != drill && drillToCompare2 != drillToCompare) {
+                                Date startTimeCompare2 = combineDateAndTime(drillToCompare2.getDate(), drillToCompare2.getStartTime());
+                                Date endTimeCompare2 = combineDateAndTime(drillToCompare2.getDate(), drillToCompare2.getEndTime());
+
+                                if (startTimeCompare2.before(endTime) && startTime.before(endTimeCompare2) &&
+                                        startTimeCompare2.before(endTimeCompare) && startTimeCompare.before(endTimeCompare2)) {
+                                    drillConcurrency = 2;
+                                } else if(drillConcurrency < 2) {
+                                    drillConcurrency = 1;
+                                }
+                            }
+                        }
                     }
                 }
             }

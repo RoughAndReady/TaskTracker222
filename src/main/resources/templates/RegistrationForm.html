@@ -52,7 +52,7 @@
 
         <div class="registration-input">
             <label class="registration-field-label registration-field-required" for="rank">Rank</label>
-            <select id="rank" th:name="rank" required>
+            <select id="rank" th:name="rank">
                 <option></option>
                 <option th:each="rank : ${ranks}" th:value="${rank}" th:text="${rank}"></option>
             </select>
@@ -60,7 +60,7 @@
 
         <div class="registration-input">
             <label class="registration-field-label registration-field-required" for="flight">Flight</label>
-            <select id="flight" th:name="flight" required>
+            <select id="flight" th:name="flight">
                 <option></option>
                 <option th:each="flight : ${flights}" th:value="${flight}" th:text="${flight}"></option>
             </select>
@@ -68,7 +68,7 @@
 
         <div class="registration-input">
             <label class="registration-field-label registration-field-required" for="workcenter">Workcenter</label>
-            <select id="workcenter" th:name="workCenter" required>
+            <select id="workcenter" th:name="workCenter">
                 <option></option>
                 <option th:each="workcenter : ${workcenters}" th:value="${workcenter}" th:text="${workcenter}"></option>
             </select>
@@ -76,13 +76,13 @@
 
         <div class="registration-input">
             <label class="registration-field-label registration-field-required" for="teams">Teams</label>
-            <select id="teams" th:name="teams" multiple required>
+            <select id="teams" th:name="teams" multiple>
                 <option></option>
                 <option th:each="team : ${teamList}" th:value="${team}" th:text="${team}"></option>
             </select>
         </div>
 
-        <input type="submit" value="Register" class="registration-submit">
+        <input type="submit" value="Register" class="registration-submit" onclick="return verifyAllFields();">
     </form>
 
 
@@ -112,6 +112,29 @@
         $('#teams').attr("data-placeholder", "Choose teams").chosen();
         $('#teams_chosen').css(select_field_css);
     });
+
+    function verifyAllFields() {
+        try {
+            if ($("#rank").val().length === 0) {
+                alert("Please select a rank!");
+                return false;
+            } else if ($("#flight").val().length === 0) {
+                alert("Please select a flight!");
+                return false;
+            } else if ($("#workcenter").val().length === 0) {
+                alert("Please select a workcenter!");
+                return false;
+            } else if ($("#teams").val().length === 0) {
+                alert("Please select at least one team!");
+                return false;
+            } else {
+                return true;
+            }
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+    }
 </script>
 </body>
 </html>

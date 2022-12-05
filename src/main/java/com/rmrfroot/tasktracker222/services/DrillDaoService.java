@@ -35,6 +35,8 @@ public interface DrillDaoService {
 
     public LocalDate convertStringToLocalDate(String date);
 
+    public String convertDateToString(Date date);
+
     public LocalDate getLocalDateOfDrill(Drill drill);
 
     public LocalDate convertDateToLocalDate(Date date);

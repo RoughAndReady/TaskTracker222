@@ -16,7 +16,7 @@ function selectDrill(id){
     updateInnerText("drill-title", selected_drill.title);
 
     updateInnerText("drill-date",
-        getDayOfDrill(selected_drill) + ", " +
+        getDayOfDrill(selected_drill).substring(0, 3) + ", " +
         getCompleteDateOfDrill(selected_drill))
 
     updateInnerText("drill-time",
@@ -48,6 +48,7 @@ function selectDrill(id){
     }
 
     renderDrillBlocks();
+    generateIntradaySummary();
 }
 
 function parseParticipantList(participantList){
@@ -138,4 +139,63 @@ function findUserByID(idToFind) {
     }
 
     return null;
+}
+
+
+function generateIntradaySummary() {
+    let intradayDiv = document.createElement('div');
+    // intradayDiv.className = "drill-intraday-div";
+    intradayDiv.id = "intraday-div";
+
+    let intradayDrills = getSelectedDayDrills();
+
+    for(let i = 0; i < intradayDrills.length; i++){
+        let currentDrill = intradayDrills[i];
+
+        let intradayItem = document.createElement('div');
+        if(currentDrill.id === selected_drill.id){
+            intradayItem.className = "drill-intraday-item drill-intraday-bg-selected";
+        } else {
+            intradayItem.className = "drill-intraday-item drill-intraday-bg" +
+                (i % 2 === 0 ? "1" : "2");
+        }
+        intradayItem.setAttribute("onclick", "selectDrill(" + currentDrill.id + ");");
+
+        let intradayTitle = document.createElement('h3');
+        intradayTitle.innerText = currentDrill.title;
+        intradayItem.appendChild(intradayTitle);
+
+        let intradayDate = document.createElement('h4');
+        intradayDate.innerText = getDayOfDrill(currentDrill).substring(0, 3) + ", " +
+            getCompleteDateOfDrill(currentDrill);
+        intradayItem.appendChild(intradayDate);
+
+        let intradayTime = document.createElement('h4');
+        intradayTime.innerText = getStartTimeOfDrillWithColon(currentDrill) + " - " +
+            getEndTimeOfDrillWithColon(currentDrill);
+        intradayItem.appendChild(intradayTime);
+
+        let intradayLocation = document.createElement("h4");
+        intradayLocation.innerText = currentDrill.location;
+        intradayItem.appendChild(intradayLocation);
+
+        intradayDiv.appendChild(intradayItem);
+    }
+
+    document.getElementById("intraday-summary").innerHTML = null;
+    document.getElementById("intraday-summary").appendChild(intradayDiv);
+}
+
+function getSelectedDayDrills() {
+    let selectedDayDrills = [];
+
+    let selectedDay = getDayOfDrill(selected_drill).substring(0, 3);
+
+    for(let i = 0; i < drills.length; i++){
+        if(getDayOfDrill(drills[i]).substring(0, 3) === selectedDay){
+            selectedDayDrills.push(drills[i]);
+        }
+    }
+
+    return selectedDayDrills;
 }
