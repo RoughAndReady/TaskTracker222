@@ -53,7 +53,7 @@ function updateSelectedUser(id) {
 }
 
 function updateFieldValue(elementID, newValue) {
-    console.log("Updating value for " + elementID + " to " + newValue);
+    // console.log("Updating value for " + elementID + " to " + newValue);
     if (newValue !== null && newValue !== undefined) {
         document.getElementById(elementID).value = newValue;
     } else {
@@ -81,7 +81,7 @@ function findUserById(id) {
 function updateUserApprovedStatus(approved) {
     if (approved) {
         document.getElementById("user-submit-button").value = "Submit";
-        document.getElementById("user-submit-button").onclick = null;
+        document.getElementById("user-submit-button").setAttribute("onclick", "return verifyAllFields();");
 
         document.getElementById("user-delete-button").value = "Delete";
         document.getElementById("user-delete-button").onclick = confirmUserDeletion;
@@ -112,4 +112,22 @@ function changeToUserSubmit() {
 
 function changeToUserDelete() {
     document.getElementById("user-delete-button").value = "Delete";
+}
+
+function verifyAllFields() {
+    if ($("#input-rank").val().length === 0) {
+        alert("Please select a rank!");
+        return false;
+    } else if ($("#input-flight").val().length === 0) {
+        alert("Please select a flight!");
+        return false;
+    } else if ($("#input-workcenter").val().length === 0) {
+        alert("Please select a workcenter!");
+        return false;
+    } else if ($("#input-teams").val().length === 0) {
+        alert("Please select at least one team!");
+        return false;
+    } else {
+        return true;
+    }
 }

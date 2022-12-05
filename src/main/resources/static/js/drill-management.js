@@ -134,6 +134,10 @@ function updateAllFields() {
 
     $('#drill-report-to').val(selected_drill.reportToID).trigger('chosen:updated');
     $('#drill-participants').val(selected_drill.participants).trigger('chosen:updated');
+
+    let deleteButton = document.getElementById("drill-delete-button");
+    deleteButton.style.position = "relative";
+    deleteButton.style.visibility = "visible";
 }
 
 function clearAllFields() {
@@ -151,6 +155,10 @@ function clearAllFields() {
 
     $('#drill-report-to').val(-1).trigger('chosen:updated');
     $('#drill-participants').val(null).trigger('chosen:updated');
+
+    let deleteButton = document.getElementById("drill-delete-button");
+    deleteButton.style.position = "absolute";
+    deleteButton.style.visibility = "hidden";
 }
 
 function findNextWeek(selectedDate) {

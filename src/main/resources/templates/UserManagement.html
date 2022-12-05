@@ -118,28 +118,28 @@
                             <th class="user-management-entry">First Name</th>
                             <td class="user-management-value-cell">
                                 <input id="input-first_name" class="user-management-value" type="text"
-                                       th:field="*{firstName}">
+                                       th:field="*{firstName}" required>
                             </td>
                         </tr>
                         <tr>
                             <th class="user-management-entry">Last Name</th>
                             <td class="user-management-value-cell">
                                 <input id="input-last_name" class="user-management-value" type="text"
-                                       th:field="*{lastName}">
+                                       th:field="*{lastName}" required>
                             </td>
                         </tr>
                         <tr>
                             <th class="user-management-entry">Mil Email</th>
                             <td class="user-management-value-cell">
-                                <input id="input-mil_email" class="user-management-value" type="text"
-                                       th:field="*{militaryEmail}">
+                                <input id="input-mil_email" class="user-management-value" type="email"
+                                       th:field="*{militaryEmail}" required>
                             </td>
                         </tr>
                         <tr>
                             <th class="user-management-entry">Civ Email</th>
                             <td class="user-management-value-cell">
-                                <input id="input-civ_email" class="user-management-value" type="text"
-                                       th:field="*{civilianEmail}">
+                                <input id="input-civ_email" class="user-management-value" type="email"
+                                       th:field="*{civilianEmail}" required>
                             </td>
                         </tr>
                         <tr>
@@ -207,8 +207,10 @@
                     </table>
 
                     <div class="user-edit-button-div">
-                        <input id="user-submit-button" class="user-edit-submit" type="submit" name="submit" value="Submit" onsubmit="changeToUserSubmit();">
-                        <input id="user-delete-button" class="user-edit-submit user-edit-delete" type="submit" name="delete" value="Delete" onsubmit="changeToUserDelete();">
+                        <input id="user-submit-button" class="user-edit-submit" type="submit" name="submit" value="Submit"
+                               onsubmit="changeToUserSubmit();">
+                        <input id="user-delete-button" class="user-edit-submit user-edit-delete" type="submit" name="delete"
+                               value="Delete" onsubmit="changeToUserDelete();">
                     </div>
                 </form>
             </div>

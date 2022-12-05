@@ -46,7 +46,7 @@ public class UserController {
      * @return front-end HTML
      */
     @GetMapping("/user-manager")
-    public String getUsersCollection(Model model, Principal principal) {
+    public String userManager(Model model, Principal principal) {
 
         /*
             If user exists and is admin, proceed.
@@ -245,10 +245,14 @@ public class UserController {
     @GetMapping("/pending-approval")
     public String pendingApproval(Principal principal) {
         User u = usersDaoService.findUserByUsername(principal.getName());
-        if (u.isApproved()) {
+        try {
+            if (u.isApproved()) {
+                return "redirect:/";
+            } else {
+                return "PendingApproval";
+            }
+        } catch (Exception e) {
             return "redirect:/";
-        } else {
-            return "PendingApproval";
         }
     }
 }

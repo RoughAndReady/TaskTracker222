@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class createPoolClient implements PoolClientInterface {
+public class CreatePoolClient implements PoolClientInterface {
 
     final String ACCESS_KEY = System.getenv("ACCESS_KEY");
     final String SECRET_KEY = System.getenv("SECRET_KEY");
