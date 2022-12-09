@@ -5,6 +5,8 @@ let datesOfWeek = [];
 let concurrencyMatrix = [];
 let numberOfColumns = null;
 
+let lastColumnDark = false;
+
 function generateDayAndDateHeaders(){
     generateDatesFromDays(daysOfWeek, datesOfWeek);
 
@@ -79,23 +81,30 @@ function generateDayColumns(){
             concurrencyLevel++;
         } else {
             concurrencyLevel = 0;
+            lastColumnDark = !lastColumnDark;
         }
 
-        generateDayColumn(datesOfWeek[i], concurrencyLevel);
+        generateDayColumn(datesOfWeek[i], concurrencyLevel, i === datesOfWeek.length - 1);
 
         lastDate = datesOfWeek[i];
     }
 }
 
-function generateDayColumn(date, concurrencyLevel){
+function generateDayColumn(date, concurrencyLevel, lastDay){
     let dayCol = document.createElement('div');
     dayCol.id = date;
     dayCol.className = "dayCol";
 
-    for(let hour = calendarStartHour; hour <calendarEndHour; hour++){
+    if(lastColumnDark) {
+        dayCol.style.backgroundColor = "rgba(255,255,255,0.4)";
+    } else {
+        dayCol.style.backgroundColor = "rgba(218,218,218,0.5)";
+    }
+
+    for(let hour = calendarStartHour; hour < calendarEndHour; hour++){
         for(let section = 1; section <= 4; section++){
             let box = document.createElement('div');
-            box.className = "q" + section;
+            box.className = "q" + section + (lastDay ? " last-day-border" : "");
             box.id = (date < 10 ? "0" : "") + date + "-" + (hour < 10 ? "0" : "") + hour +
                 ((15 * (section - 1)) === 0 ? "00" : (15 * (section - 1))) +
                 (concurrencyLevel > 0 ? "-" + concurrencyLevel : "");

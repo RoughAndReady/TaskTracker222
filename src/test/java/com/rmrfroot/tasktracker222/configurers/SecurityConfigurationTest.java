@@ -1,5 +1,5 @@
 package com.rmrfroot.tasktracker222.configurers;
-
+/*
 import org.junit.jupiter.api.Test;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -21,3 +21,5 @@ class SecurityConfigurationTest {
                 .logout();
     }
 }
+
+ */
