@@ -20,7 +20,7 @@ Task Tracker 222 has the following features:
 
 
 ## Client Logo
-![image](images/222 ISS.png)
+![image](images/222_ISS.png)
 
 
 ## User Interface
