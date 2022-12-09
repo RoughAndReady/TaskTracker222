@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.rmrfroot</groupId>
     <artifactId>tasktracker222</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>TaskTracker222</name>
     <description>TaskTracker222</description>
     <properties>

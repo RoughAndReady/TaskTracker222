@@ -1,5 +1,6 @@
 package com.rmrfroot.tasktracker222.controllers;
 
+/*
 import com.rmrfroot.tasktracker222.awsCognito.PoolClientInterface;
 import com.rmrfroot.tasktracker222.dao.UsersDao;
 import com.rmrfroot.tasktracker222.entities.User;
@@ -171,3 +172,4 @@ class UserControllerTest {
 
     }
 }
+*/

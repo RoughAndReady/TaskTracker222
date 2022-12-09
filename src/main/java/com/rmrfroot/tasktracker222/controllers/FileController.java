@@ -117,7 +117,8 @@ public class FileController {
                 "Top3\n" +
                 "Rising6\n" +
                 "Flt Leadership\n" +
-                "DOMOPS";
+                "DOMOPS\n" +
+                "Viewer";
     }
 
     private static String getDefaultLocations() {
